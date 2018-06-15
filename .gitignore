@@ -136,5 +136,7 @@ nbdist/
 .nb-gradle/
 nbactions.xml
 
+# Ignore util
+util/
 
 # End of https://www.gitignore.io/api/eclipse,netbeans,intellij
