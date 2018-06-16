@@ -62,8 +62,8 @@ public class StudentDAO {
         ResultSet resultSet = null;
         Connection connection = ConnectionFactory.getConnection();
 
-        String sql = "CALL CADASTRO_USUARIO(?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        preparedStatement = connection.prepareStatement(sql);
+        String SQLQuery = "CALL CADASTRO_USUARIO(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        preparedStatement = connection.prepareStatement(SQLQuery);
 
         preparedStatement.setString(1, user.getUser());
         preparedStatement.setString(2, encryptedPassword);
@@ -77,6 +77,8 @@ public class StudentDAO {
 
         resultSet = preparedStatement.executeQuery();
         connection.close();
+
+
 
         return user;
     }

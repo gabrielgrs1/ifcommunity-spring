@@ -36,11 +36,10 @@ public class User implements Serializable {
     }
 
     // Dashboard constructor
-    public User(int userId, int teacherId, String user, String password, String name, String phone, String mail, int typeUser, String website) {
+    public User(int userId, int teacherId, String user, String name, String phone, String mail, int typeUser, String website) {
         this.userId = userId;
         this.teacherId = teacherId;
         this.user = user;
-        this.password = password;
         this.name = name;
         this.phone = phone;
         this.mail = mail;
@@ -62,11 +61,10 @@ public class User implements Serializable {
     }
 
     // Dashboard constructor
-    public User(int userId, int studentId, String user, String password, String name, String phone, String mail, int typeUser, int period, String enrolledNumber) {
+    public User(int userId, int studentId, String user, String name, String phone, String mail, int typeUser, int period, String enrolledNumber) {
         this.userId = userId;
         this.studentId = studentId;
         this.user = user;
-        this.password = password;
         this.name = name;
         this.phone = phone;
         this.mail = mail;
@@ -88,11 +86,10 @@ public class User implements Serializable {
         this.permission = permission;
     }
 
-    // Dashboard constructor
-    public User(int administratorId, String user, String password, String name, String phone, String mail, int typeUser, int permission, String website) {
+    // Dashboard constructor
+    public User(int administratorId, String user, String name, String phone, String mail, int typeUser, int permission, String website) {
         this.administratorId = administratorId;
         this.user = user;
-        this.password = password;
         this.name = name;
         this.phone = phone;
         this.mail = mail;
