@@ -10,11 +10,11 @@ public class ConnectionFactory {
         try {
             String driverName = "com.mysql.jdbc.Driver";
             Class.forName(driverName);
-            String serverName = "localhost";
-            String database = "ifcommunity";
+            String serverName = "us-cdbr-iron-east-04.cleardb.net";
+            String database = "heroku_599d365acd76437";
             String url = "jdbc:mysql://" + serverName + "/" + database;
-            String user = "root";
-            String password = "";
+            String user = "b52de50bac48c2";
+            String password = "e61df8bd704c3da";
 
             Connection connection = DriverManager.getConnection(url, user, password);
 
