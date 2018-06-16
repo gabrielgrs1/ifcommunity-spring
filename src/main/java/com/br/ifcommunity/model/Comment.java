@@ -1,8 +1,9 @@
 package com.br.ifcommunity.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Comment {
+public class Comment implements Serializable {
 
     private int postId;
     private String commentText;

@@ -1,8 +1,9 @@
 package com.br.ifcommunity.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Administrator extends User{
+public class Administrator extends User implements Serializable {
 
     private int administratorId;
     private int permission;
@@ -12,9 +13,9 @@ public class Administrator extends User{
     private String name;
     private String phone;
     private String mail;
-    private String typeUser;
+    private int typeUser;
 
-    public Administrator(int id, String user, String password, String name, String phone, String mail, String typeUser, int administratorId, int permission, int userId) {
+    public Administrator(int id, String user, String password, String name, String phone, String mail, int typeUser, int administratorId, int permission, int userId) {
         super(id, user, password, name, phone, mail, typeUser);
         this.administratorId = administratorId;
         this.permission = permission;
@@ -82,11 +83,11 @@ public class Administrator extends User{
         this.mail = mail;
     }
 
-    public String getTypeUser() {
+    public int getTypeUser() {
         return typeUser;
     }
 
-    public void setTypeUser(String typeUser) {
+    public void setTypeUser(int typeUser) {
         this.typeUser = typeUser;
     }
 
@@ -112,11 +113,11 @@ public class Administrator extends User{
         return administratorId == that.administratorId &&
                 permission == that.permission &&
                 userId == that.userId &&
+                typeUser == that.typeUser &&
                 Objects.equals(user, that.user) &&
                 Objects.equals(name, that.name) &&
                 Objects.equals(phone, that.phone) &&
-                Objects.equals(mail, that.mail) &&
-                Objects.equals(typeUser, that.typeUser);
+                Objects.equals(mail, that.mail);
     }
 
     @Override

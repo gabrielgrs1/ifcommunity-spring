@@ -11,28 +11,27 @@ import java.util.regex.Pattern;
  *
  * @author mmara_000
  */
-public class Regex {
+public class PasswordValidation {
 
     private String errors = "";
     private String password;
 
-    public void setPassword(String senha) {
-        this.password = senha;
+    public PasswordValidation(String password) {
+        this.password = password;
     }
 
     public String getErrors() {
-        System.out.println(password + " regex");
         char[] Senha = password.toCharArray();
 
-        // Verifica se a senha tem no máximo 25 caracteres.
+        // Verifica se a senha tem no máximo 25 caracteres
         if (Senha.length > 25) {
-            errors += "A senha deve ter no máximo 25 caractéres!";
+            errors += " A senha deve ter no máximo 25 caracteres!";
         }
 
-        // Verifica se a senha tem no máximo 25 caracteres.
+        // Verifica se a senha tem os requisitos minimos
         Pattern pattAlphaNum = Pattern.compile("^[a-zA-Z0-9$@$!%*?&+-]+$");
         if (!pattAlphaNum.matcher(password).matches()) {
-            errors += "A senha não atende aos requisitos!";
+            errors += " A senha não atende aos requisitos!";
         }
 
         return errors;

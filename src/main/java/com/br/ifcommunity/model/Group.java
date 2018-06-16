@@ -1,8 +1,9 @@
 package com.br.ifcommunity.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Group {
+public class Group implements Serializable {
 
     private int groupId;
     private String groupName;
