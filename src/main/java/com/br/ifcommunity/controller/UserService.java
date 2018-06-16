@@ -1,7 +1,8 @@
 package com.br.ifcommunity.controller;
 
-import com.br.ifcommunity.dao.StudentDAO;
+import com.br.ifcommunity.dao.UserDAO;
 import com.br.ifcommunity.model.User;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -20,8 +21,11 @@ public class UserService {
 
         try {
             if (user.getTypeUser() == 1) { // Case the user is Student
-                if (StudentDAO.verifyRegister(user).equals("")) {
-                    user = StudentDAO.register(user);
+                if (UserDAO.verifyRegister(user).equals("")) {
+                    user = UserDAO.register(user);
+                } else {
+                    user = new User("Login ou email ou matricula já cadastro(s)!");
+                    return  ResponseEntity.status(HttpStatus.CONFLICT).body(user);
                 }
             } else if (user.getTypeUser() == 2) { // Case the user is Teacher
 

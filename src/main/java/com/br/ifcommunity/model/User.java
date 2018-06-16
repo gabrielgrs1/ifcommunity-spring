@@ -23,6 +23,11 @@ public class User implements Serializable {
     public User() {
     }
 
+    // ERROR CONSTRUCTOR - 409 CONFLICT
+    public User(String name) {
+        this.name = name;
+    }
+
     // TEACHER constructor
     // Register constructor
     public User(String user, String password, String name, String phone, String mail, int typeUser, String website) {
