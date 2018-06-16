@@ -80,9 +80,6 @@ local.properties
 .idea/**/dynamic.xml
 .idea/**/uiDesigner.xml
 
-# Gradle:
-.idea/**/gradle.xml
-.idea/**/libraries
 
 # CMake
 cmake-build-debug/
@@ -133,7 +130,6 @@ build/
 nbbuild/
 dist/
 nbdist/
-.nb-gradle/
 nbactions.xml
 
 
