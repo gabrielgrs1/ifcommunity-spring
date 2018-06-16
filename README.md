@@ -6,6 +6,6 @@ Solução criada pensando em uma rede universitária onde os alunos podem compar
 * **Senha: admintegrador**
 
 # Autores
-* **Gabriel Guilherme** - *Back-End/DBA/Front-end(Login)/Requests(Dashboard)* - [gabrielgrs1](https://github.com/gabrielgrs1)
+* **Gabriel Guilherme** - *Back-End/DBA/Front-end(Login)/DevOps* - [gabrielgrs1](https://github.com/gabrielgrs1)
 * **Matheus Alexander** - *Front-End(Dashboard)* - [MMarafelli](https://github.com/MMarafelli)
-* **Felipe Augusto** - *Front-End* - [Felipears](https://github.com/Felipears)
+* **Felipe Augusto** - *Front-End/Documentação* - [Felipears](https://github.com/Felipears)
