@@ -19,12 +19,18 @@ public class ConnectionFactory {
             Connection connection = DriverManager.getConnection(url, user, password);
 
             return connection;
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
 
         return null;
+    }
+
+    public static void main(String[]args){
+        if (new ConnectionFactory().getConnection() != null) {
+            System.out.println("Conectado com sucesso!");
+        } else {
+            System.out.println("Erro");
+        }
     }
 }

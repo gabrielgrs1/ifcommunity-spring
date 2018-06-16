@@ -9,18 +9,20 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
 
 public class UserDAO {
 
     public static String verifyRegister(User user) throws SQLException {
         PreparedStatement preparedStatement;
-        ResultSet resultSet = null;
+        ResultSet resultSet;
         Connection connection = ConnectionFactory.getConnection();
         String errors = "";
 
         // Verifica se o login já não está cadastrado.
         String sql = "SELECT * FROM TB_USUARIO WHERE USUARIO = ?";
-        preparedStatement = connection.prepareStatement(sql);
+        preparedStatement = Objects.requireNonNull(connection).prepareStatement(sql);
+
         preparedStatement.setString(1, user.getUser());
         resultSet = preparedStatement.executeQuery();
 
@@ -50,6 +52,8 @@ public class UserDAO {
         // Verifica errors de passwordValidation na senha.
         PasswordValidation passwordValidation = new PasswordValidation(user.getPassword());
         errors += passwordValidation.getErrors();
+
+        connection.close();
 
         return errors;
     }
