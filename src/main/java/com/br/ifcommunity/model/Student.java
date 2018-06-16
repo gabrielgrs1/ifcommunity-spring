@@ -14,6 +14,7 @@ public class Student extends User{
     private String phone;
     private String mail;
     private String typeUser;
+    private String password;
 
     public Student(String user, String password, String name, String phone, String mail, String typeUser, int studentId, int period, String enrolledNumber, int userId) {
         super(userId, user, password, name, phone, mail, typeUser);
@@ -26,6 +27,7 @@ public class Student extends User{
         this.phone = phone;
         this.mail = mail;
         this.typeUser = typeUser;
+        this.password = password;
     }
 
     public int getStudentId() {
@@ -100,6 +102,14 @@ public class Student extends User{
         this.typeUser = typeUser;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Override
     public String toString() {
         return "Student{" +
@@ -112,6 +122,7 @@ public class Student extends User{
                 ", phone='" + phone + '\'' +
                 ", mail='" + mail + '\'' +
                 ", typeUser='" + typeUser + '\'' +
+                ", password='" + password + '\'' +
                 '}';
     }
 
@@ -128,12 +139,13 @@ public class Student extends User{
                 Objects.equals(name, student.name) &&
                 Objects.equals(phone, student.phone) &&
                 Objects.equals(mail, student.mail) &&
-                Objects.equals(typeUser, student.typeUser);
+                Objects.equals(typeUser, student.typeUser) &&
+                Objects.equals(password, student.password);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(studentId, period, enrolledNumber, userId, user, name, phone, mail, typeUser);
+        return Objects.hash(studentId, period, enrolledNumber, userId, user, name, phone, mail, typeUser, password);
     }
 }
