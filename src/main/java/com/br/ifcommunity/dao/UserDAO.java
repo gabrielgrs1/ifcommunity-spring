@@ -162,18 +162,64 @@ public class UserDAO {
         return new User("Conexão não estabelecida!");
     }
 
+    public static User updateStudent(User studentRequestBody) throws SQLException {
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        Connection connection = ConnectionFactory.getConnection();
+        User student = null;
+
+        if (!connection.isClosed() || connection != null) {
+            String SQLQuery = "CALL SP_ATUALIZA_PERFIL(?, ?, ?, ?)";
+
+            preparedStatement = connection.prepareCall(SQLQuery);
+            preparedStatement.setInt(1, studentRequestBody.getUserId());
+            preparedStatement.setString(2, studentRequestBody.getMail());
+            preparedStatement.setString(3, studentRequestBody.getName());
+            preparedStatement.setString(4, studentRequestBody.getPhone());
+
+            resultSet = preparedStatement.executeQuery();
+
+            SQLQuery = "SELECT * FROM VW_RECUPERA_ALUNO WHERE EMAIL = ?";
+            preparedStatement = connection.prepareStatement(SQLQuery);
+
+            preparedStatement.setString(1, studentRequestBody.getMail());
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                student = new User(
+                        resultSet.getInt("ID_USUARIO"),
+                        resultSet.getInt("ID_ALUNO"),
+                        resultSet.getString("USUARIO"),
+                        resultSet.getString("NOME"),
+                        resultSet.getString("TELEFONE"),
+                        resultSet.getString("EMAIL"),
+                        resultSet.getInt("TIPO_DE_REGISTRO"),
+                        resultSet.getInt("PERIODO"),
+                        resultSet.getString("MATRICULA")
+                );
+            }
+
+            connection.close();
+
+            return student;
+        }
+
+        return new User("Conexão não estabelecida!");
+    }
+
 
 }
 
-//class main {
-//    public static void main(String[] args) {
-//        User user = null;
-//
-//        try {
-//            user = UserDAO.login("gabriel_guilherme2006@hotmail.com", "Mineiroi@1");
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        System.out.println(user);
-//    }
-//}
+
+class main {
+    public static void main(String[] args) {
+        User user = null;
+
+        try {
+            user = UserDAO.updateStudent(new User(2, "gabriel_teste@hotmail.com", "Gabriel Teste", "Telefone teste"));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println(user);
+    }
+}

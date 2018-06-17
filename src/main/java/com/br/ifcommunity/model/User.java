@@ -34,6 +34,14 @@ public class User implements Serializable {
         this.password = password;
     }
 
+    // Update constructor
+    public User(int userId, String name, String phone, String mail) {
+        this.userId = userId;
+        this.name = name;
+        this.phone = phone;
+        this.mail = mail;
+    }
+
     // TEACHER constructor
     // Register constructor
     public User(String user, String password, String name, String phone, String mail, int typeUser, String website) {
@@ -113,112 +121,44 @@ public class User implements Serializable {
         return userId;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public int getStudentId() {
-        return studentId;
-    }
-
-    public void setStudentId(int studentId) {
-        this.studentId = studentId;
-    }
-
-    public int getTeacherId() {
-        return teacherId;
-    }
-
-    public void setTeacherId(int teacherId) {
-        this.teacherId = teacherId;
-    }
-
-    public int getAdministratorId() {
-        return administratorId;
-    }
-
-    public void setAdministratorId(int administratorId) {
-        this.administratorId = administratorId;
-    }
 
     public String getUser() {
         return user;
     }
 
-    public void setUser(String user) {
-        this.user = user;
-    }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getPhone() {
         return phone;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
 
     public String getMail() {
         return mail;
     }
 
-    public void setMail(String mail) {
-        this.mail = mail;
-    }
 
     public int getTypeUser() {
         return typeUser;
     }
 
-    public void setTypeUser(int typeUser) {
-        this.typeUser = typeUser;
-    }
 
     public int getPeriod() {
         return period;
     }
 
-    public void setPeriod(int period) {
-        this.period = period;
-    }
 
     public String getEnrolledNumber() {
         return enrolledNumber;
-    }
-
-    public void setEnrolledNumber(String enrolledNumber) {
-        this.enrolledNumber = enrolledNumber;
-    }
-
-    public int getPermission() {
-        return permission;
-    }
-
-    public void setPermission(int permission) {
-        this.permission = permission;
-    }
-
-    public String getWebsite() {
-        return website;
-    }
-
-    public void setWebsite(String website) {
-        this.website = website;
     }
 
     @Override

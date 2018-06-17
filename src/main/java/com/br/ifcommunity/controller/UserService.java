@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -24,7 +25,7 @@ public class UserService {
                 if (UserDAO.verifyRegister(user).equals("")) {
                     user = UserDAO.register(user);
                 } else {
-                    user = new User("Login ou email ou matricula já cadastro(s)!");
+                    user = new User("Usuário ou email ou matricula já cadastro(s)!");
                     return  ResponseEntity.status(HttpStatus.CONFLICT).body(user);
                 }
             } else if (user.getTypeUser() == 2) { // Case the user is Teacher
@@ -46,6 +47,24 @@ public class UserService {
 
         try {
             user = UserDAO.login(requestBody);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        if (user.getName().equals("Conexão não estabelecida!")) {
+            return ResponseEntity.status(HttpStatus.BANDWIDTH_LIMIT_EXCEEDED).body(user);
+        }
+
+
+        return ResponseEntity.ok().body(user);
+    }
+
+    @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> udpateUser(@RequestBody User requestBody) {
+        User user = null;
+
+        try {
+            user = UserDAO.updateStudent(requestBody); // Case update Student
         } catch (SQLException e) {
             e.printStackTrace();
         }
