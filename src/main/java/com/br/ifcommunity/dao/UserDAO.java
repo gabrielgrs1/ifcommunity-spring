@@ -3,6 +3,7 @@ package com.br.ifcommunity.dao;
 import com.br.ifcommunity.model.User;
 import com.br.ifcommunity.regex.PasswordValidation;
 import com.br.ifcommunity.util.ConnectionFactory;
+import com.br.ifcommunity.util.DecryptPassword;
 import com.br.ifcommunity.util.EncryptPassword;
 
 import java.sql.Connection;
@@ -59,7 +60,7 @@ public class UserDAO {
     }
 
     public static User register(User user) throws SQLException {
-        String encryptedPassword = new EncryptPassword(user.getPassword()).encrypt();
+//        String encryptedPassword = new EncryptPassword(user.getPassword()).encrypt();
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         Connection connection = ConnectionFactory.getConnection();
@@ -70,7 +71,7 @@ public class UserDAO {
         if (connection != null) {
             preparedStatement = connection.prepareCall(SQLQuery);
             preparedStatement.setString(1, user.getUser());
-            preparedStatement.setString(2, encryptedPassword);
+            preparedStatement.setString(2, user.getPassword());
             preparedStatement.setString(3, user.getMail());
             preparedStatement.setString(4, user.getName());
             preparedStatement.setInt(5, user.getPeriod());
@@ -107,4 +108,72 @@ public class UserDAO {
         return student;
     }
 
+    public static User login(User userRequestBody) throws SQLException {
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        Connection connection = ConnectionFactory.getConnection();
+        User user = null;
+
+        if (!connection.isClosed() || connection != null) {
+            String SQLQuery = "SELECT * FROM VW_RECUPERA_ALUNO WHERE MATRICULA = ? OR EMAIL = ? OR USUARIO = ?";
+            preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
+
+            preparedStatement.setString(1, userRequestBody.getUser());
+            preparedStatement.setString(2, userRequestBody.getUser());
+            preparedStatement.setString(3, userRequestBody.getUser());
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                if (resultSet.getString("SENHA").equals(userRequestBody.getPassword())) {
+                    if (resultSet.getInt("TIPO_DE_REGISTRO") == 1) {    // Case the user is Student
+                        user = new User(
+                                resultSet.getInt("ID_USUARIO"),
+                                resultSet.getInt("ID_ALUNO"),
+                                resultSet.getString("USUARIO"),
+                                resultSet.getString("NOME"),
+                                resultSet.getString("TELEFONE"),
+                                resultSet.getString("EMAIL"),
+                                resultSet.getInt("TIPO_DE_REGISTRO"),
+                                resultSet.getInt("PERIODO"),
+                                resultSet.getString("MATRICULA")
+                        );
+                    } else if (resultSet.getInt("TIPO_DE_REGISTRO") == 2) { // Case the user is Teacher
+                        user = new User(
+                                resultSet.getInt("ID_USUARIO"),
+                                resultSet.getInt("ID_PROFESSOR"),
+                                resultSet.getString("USUARIO"),
+                                resultSet.getString("NOME"),
+                                resultSet.getString("TELEFONE"),
+                                resultSet.getString("EMAIL"),
+                                resultSet.getInt("TIPO_DE_REGISTRO"),
+                                resultSet.getInt("PERIODO"),
+                                resultSet.getString("MATRICULA")
+                        );
+                    } else { // Case the user is Administrator
+
+                    }
+                }
+            }
+            connection.close();
+
+            return user;
+        }
+
+        return new User("Conexão não estabelecida!");
+    }
+
+
 }
+
+//class main {
+//    public static void main(String[] args) {
+//        User user = null;
+//
+//        try {
+//            user = UserDAO.login("gabriel_guilherme2006@hotmail.com", "Mineiroi@1");
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        System.out.println(user);
+//    }
+//}

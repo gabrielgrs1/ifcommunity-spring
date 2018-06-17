@@ -39,5 +39,23 @@ public class UserService {
 
         return ResponseEntity.ok().body(user);
     }
+
+    @RequestMapping(value = "/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> login(@RequestBody User requestBody) {
+        User user = null;
+
+        try {
+            user = UserDAO.login(requestBody);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        if (user.getName().equals("Conexão não estabelecida!")) {
+            return ResponseEntity.status(HttpStatus.BANDWIDTH_LIMIT_EXCEEDED).body(user);
+        }
+
+
+        return ResponseEntity.ok().body(user);
+    }
 }
 

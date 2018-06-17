@@ -3,6 +3,8 @@ package com.br.ifcommunity.util;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
+import java.util.concurrent.Executors;
 
 public class ConnectionFactory {
 
@@ -16,9 +18,7 @@ public class ConnectionFactory {
             String user = "b52de50bac48c2";
             String password = "e61df8bd704c3da";
 
-            Connection connection = DriverManager.getConnection(url, user, password);
-
-            return connection;
+            return DriverManager.getConnection(url, user, password);
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }

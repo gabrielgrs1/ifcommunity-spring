@@ -23,9 +23,15 @@ public class User implements Serializable {
     public User() {
     }
 
-    // ERROR CONSTRUCTOR - 409 CONFLICT
+    // ERROR CONSTRUCTOR
     public User(String name) {
         this.name = name;
+    }
+
+    // Login constructor
+    public User(String user, String password) {
+        this.user = user;
+        this.password = password;
     }
 
     // TEACHER constructor
