@@ -3,8 +3,6 @@ package com.br.ifcommunity.dao;
 import com.br.ifcommunity.model.User;
 import com.br.ifcommunity.regex.PasswordValidation;
 import com.br.ifcommunity.util.ConnectionFactory;
-import com.br.ifcommunity.util.DecryptPassword;
-import com.br.ifcommunity.util.EncryptPassword;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,6 +21,7 @@ public class UserDAO {
         // Verifica se o login já não está cadastrado.
         String sql = "SELECT * FROM TB_USUARIO WHERE USUARIO = ?";
         preparedStatement = Objects.requireNonNull(connection).prepareStatement(sql);
+
 
         preparedStatement.setString(1, user.getUser());
         resultSet = preparedStatement.executeQuery();
@@ -68,20 +67,21 @@ public class UserDAO {
 
         String SQLQuery = "CALL CADASTRO_USUARIO(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        if (connection != null) {
-            preparedStatement = connection.prepareCall(SQLQuery);
-            preparedStatement.setString(1, user.getUser());
-            preparedStatement.setString(2, user.getPassword());
-            preparedStatement.setString(3, user.getMail());
-            preparedStatement.setString(4, user.getName());
-            preparedStatement.setInt(5, user.getPeriod());
-            preparedStatement.setString(6, user.getEnrolledNumber());
-            preparedStatement.setString(7, user.getPhone());
-            preparedStatement.setInt(8, 1);
-            preparedStatement.setString(9, null);
 
-            resultSet = preparedStatement.executeQuery();
-        }
+        preparedStatement = connection.prepareCall(SQLQuery);
+
+        preparedStatement.setString(1, user.getUser());
+        preparedStatement.setString(2, user.getPassword());
+        preparedStatement.setString(3, user.getMail());
+        preparedStatement.setString(4, user.getName());
+        preparedStatement.setInt(5, user.getPeriod());
+        preparedStatement.setString(6, user.getEnrolledNumber());
+        preparedStatement.setString(7, user.getPhone());
+        preparedStatement.setInt(8, 1);
+        preparedStatement.setString(9, null);
+
+        resultSet = preparedStatement.executeQuery();
+
 
         SQLQuery = "SELECT * FROM VW_RECUPERA_ALUNO WHERE EMAIL = ?";
         preparedStatement = connection.prepareStatement(SQLQuery);
@@ -102,7 +102,6 @@ public class UserDAO {
                     resultSet.getString("MATRICULA")
             );
         }
-
         connection.close();
 
         return student;
@@ -114,52 +113,54 @@ public class UserDAO {
         Connection connection = ConnectionFactory.getConnection();
         User user = null;
 
-        if (!connection.isClosed() || connection != null) {
-            String SQLQuery = "SELECT * FROM VW_RECUPERA_ALUNO WHERE MATRICULA = ? OR EMAIL = ? OR USUARIO = ?";
-            preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
+        String SQLQuery = "SELECT * FROM VW_RECUPERA_ALUNO WHERE MATRICULA = ? OR EMAIL = ? OR USUARIO = ?";
 
-            preparedStatement.setString(1, userRequestBody.getUser());
-            preparedStatement.setString(2, userRequestBody.getUser());
-            preparedStatement.setString(3, userRequestBody.getUser());
-            resultSet = preparedStatement.executeQuery();
 
-            if (resultSet.next()) {
-                if (resultSet.getString("SENHA").equals(userRequestBody.getPassword())) {
-                    if (resultSet.getInt("TIPO_DE_REGISTRO") == 1) {    // Case the user is Student
-                        user = new User(
-                                resultSet.getInt("ID_USUARIO"),
-                                resultSet.getInt("ID_ALUNO"),
-                                resultSet.getString("USUARIO"),
-                                resultSet.getString("NOME"),
-                                resultSet.getString("TELEFONE"),
-                                resultSet.getString("EMAIL"),
-                                resultSet.getInt("TIPO_DE_REGISTRO"),
-                                resultSet.getInt("PERIODO"),
-                                resultSet.getString("MATRICULA")
-                        );
-                    } else if (resultSet.getInt("TIPO_DE_REGISTRO") == 2) { // Case the user is Teacher
-                        user = new User(
-                                resultSet.getInt("ID_USUARIO"),
-                                resultSet.getInt("ID_PROFESSOR"),
-                                resultSet.getString("USUARIO"),
-                                resultSet.getString("NOME"),
-                                resultSet.getString("TELEFONE"),
-                                resultSet.getString("EMAIL"),
-                                resultSet.getInt("TIPO_DE_REGISTRO"),
-                                resultSet.getInt("PERIODO"),
-                                resultSet.getString("MATRICULA")
-                        );
-                    } else { // Case the user is Administrator
+        preparedStatement = connection.prepareStatement(SQLQuery);
 
-                    }
+
+        System.out.println("User request body: " + userRequestBody);
+
+        preparedStatement.setString(1, userRequestBody.getUser());
+        preparedStatement.setString(2, userRequestBody.getUser());
+        preparedStatement.setString(3, userRequestBody.getUser());
+        resultSet = preparedStatement.executeQuery();
+
+        if (resultSet.next()) {
+            if (resultSet.getString("SENHA").equals(userRequestBody.getPassword())) {
+                if (resultSet.getInt("TIPO_DE_REGISTRO") == 1) {    // Case the user is Student
+                    user = new User(
+                            resultSet.getInt("ID_USUARIO"),
+                            resultSet.getInt("ID_ALUNO"),
+                            resultSet.getString("USUARIO"),
+                            resultSet.getString("NOME"),
+                            resultSet.getString("TELEFONE"),
+                            resultSet.getString("EMAIL"),
+                            resultSet.getInt("TIPO_DE_REGISTRO"),
+                            resultSet.getInt("PERIODO"),
+                            resultSet.getString("MATRICULA")
+                    );
+                } else if (resultSet.getInt("TIPO_DE_REGISTRO") == 2) { // Case the user is Teacher
+                    user = new User(
+                            resultSet.getInt("ID_USUARIO"),
+                            resultSet.getInt("ID_PROFESSOR"),
+                            resultSet.getString("USUARIO"),
+                            resultSet.getString("NOME"),
+                            resultSet.getString("TELEFONE"),
+                            resultSet.getString("EMAIL"),
+                            resultSet.getInt("TIPO_DE_REGISTRO"),
+                            resultSet.getInt("PERIODO"),
+                            resultSet.getString("MATRICULA")
+                    );
+                } else { // Case the user is Administrator
+
                 }
             }
-            connection.close();
-
-            return user;
         }
 
-        return new User("Conexão não estabelecida!");
+        connection.close();
+        return user;
+
     }
 
     public static User updateStudent(User studentRequestBody) throws SQLException {
@@ -168,58 +169,46 @@ public class UserDAO {
         Connection connection = ConnectionFactory.getConnection();
         User student = null;
 
-        if (!connection.isClosed() || connection != null) {
-            String SQLQuery = "CALL SP_ATUALIZA_PERFIL(?, ?, ?, ?)";
+        String SQLQuery = "CALL SP_ATUALIZA_PERFIL(?, ?, ?, ?)";
 
-            preparedStatement = connection.prepareCall(SQLQuery);
-            preparedStatement.setInt(1, studentRequestBody.getUserId());
-            preparedStatement.setString(2, studentRequestBody.getMail());
-            preparedStatement.setString(3, studentRequestBody.getName());
-            preparedStatement.setString(4, studentRequestBody.getPhone());
+        preparedStatement = connection.prepareCall(SQLQuery);
 
-            resultSet = preparedStatement.executeQuery();
+        preparedStatement.setInt(1, studentRequestBody.getUserId());
+        preparedStatement.setString(2, studentRequestBody.getMail());
+        preparedStatement.setString(3, studentRequestBody.getName());
+        preparedStatement.setString(4, studentRequestBody.getPhone());
 
-            SQLQuery = "SELECT * FROM VW_RECUPERA_ALUNO WHERE EMAIL = ?";
-            preparedStatement = connection.prepareStatement(SQLQuery);
+        resultSet = preparedStatement.executeQuery();
 
-            preparedStatement.setString(1, studentRequestBody.getMail());
-            resultSet = preparedStatement.executeQuery();
+        SQLQuery = "SELECT * FROM VW_RECUPERA_ALUNO WHERE EMAIL = ?";
+        preparedStatement = connection.prepareStatement(SQLQuery);
 
-            while (resultSet.next()) {
-                student = new User(
-                        resultSet.getInt("ID_USUARIO"),
-                        resultSet.getInt("ID_ALUNO"),
-                        resultSet.getString("USUARIO"),
-                        resultSet.getString("NOME"),
-                        resultSet.getString("TELEFONE"),
-                        resultSet.getString("EMAIL"),
-                        resultSet.getInt("TIPO_DE_REGISTRO"),
-                        resultSet.getInt("PERIODO"),
-                        resultSet.getString("MATRICULA")
-                );
-            }
+        preparedStatement.setString(1, studentRequestBody.getMail());
+        resultSet = preparedStatement.executeQuery();
 
-            connection.close();
-
-            return student;
+        while (resultSet.next()) {
+            student = new User(
+                    resultSet.getInt("ID_USUARIO"),
+                    resultSet.getInt("ID_ALUNO"),
+                    resultSet.getString("USUARIO"),
+                    resultSet.getString("NOME"),
+                    resultSet.getString("TELEFONE"),
+                    resultSet.getString("EMAIL"),
+                    resultSet.getInt("TIPO_DE_REGISTRO"),
+                    resultSet.getInt("PERIODO"),
+                    resultSet.getString("MATRICULA")
+            );
         }
 
-        return new User("Conexão não estabelecida!");
-    }
-
-
-}
-
-
-class main {
-    public static void main(String[] args) {
-        User user = null;
-
-        try {
-            user = UserDAO.updateStudent(new User(2, "gabriel_teste@hotmail.com", "Gabriel Teste", "Telefone teste"));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        System.out.println(user);
+        connection.close();
+        return student;
     }
 }
+
+
+//class main {
+//    public static void main(String[] args) {
+//        User user = UserDAO.updateStudent(new User(2, "gabriel_teste@hotmail.com", "Gabriel Teste", "Telefone teste"));
+//        System.out.println(user);
+//    }
+//}

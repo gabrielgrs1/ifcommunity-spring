@@ -3,8 +3,6 @@ package com.br.ifcommunity.util;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Properties;
-import java.util.concurrent.Executors;
 
 public class ConnectionFactory {
 
@@ -12,15 +10,17 @@ public class ConnectionFactory {
         try {
             String driverName = "com.mysql.jdbc.Driver";
             Class.forName(driverName);
-            String serverName = "us-cdbr-iron-east-04.cleardb.net";
-            String database = "heroku_599d365acd76437";
+            String serverName = "ifcommunity.mysql.uhserver.com";
+            String database = "ifcommunity";
             String url = "jdbc:mysql://" + serverName + "/" + database;
-            String user = "b52de50bac48c2";
-            String password = "e61df8bd704c3da";
+            String user = "admin_if";
+            String password = "Admintegrador@1";
 
             return DriverManager.getConnection(url, user, password);
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            System.out.println(e.getSQLState());
+        } catch (ClassNotFoundException e) {
+            System.out.println(e.getCause());
         }
 
         return null;

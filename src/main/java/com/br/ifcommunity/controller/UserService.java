@@ -7,7 +7,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -20,23 +19,24 @@ public class UserService {
     @RequestMapping(value = "/register", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> registerUser(@RequestBody User user) {
 
-        try {
-            if (user.getTypeUser() == 1) { // Case the user is Student
+        if (user.getTypeUser() == 1) { // Case the user is Student
+            try {
                 if (UserDAO.verifyRegister(user).equals("")) {
                     user = UserDAO.register(user);
                 } else {
                     user = new User("Usuário ou email ou matricula já cadastro(s)!");
-                    return  ResponseEntity.status(HttpStatus.CONFLICT).body(user);
+
+                    return ResponseEntity.status(HttpStatus.CONFLICT).body(user);
                 }
-            } else if (user.getTypeUser() == 2) { // Case the user is Teacher
-
-            } else { // Case the user is Administrator
-
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
+        } else if (user.getTypeUser() == 2) { // Case the user is Teacher
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } else { // Case the user is Administrator
+
         }
+
 
         return ResponseEntity.ok().body(user);
     }
@@ -47,14 +47,10 @@ public class UserService {
 
         try {
             user = UserDAO.login(requestBody);
+            System.out.println("User response body " + user);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        if (user.getName().equals("Conexão não estabelecida!")) {
-            return ResponseEntity.status(HttpStatus.BANDWIDTH_LIMIT_EXCEEDED).body(user);
-        }
-
 
         return ResponseEntity.ok().body(user);
     }
@@ -65,14 +61,10 @@ public class UserService {
 
         try {
             user = UserDAO.updateStudent(requestBody); // Case update Student
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        if (user.getName().equals("Conexão não estabelecida!")) {
-            return ResponseEntity.status(HttpStatus.BANDWIDTH_LIMIT_EXCEEDED).body(user);
-        }
-
 
         return ResponseEntity.ok().body(user);
     }
