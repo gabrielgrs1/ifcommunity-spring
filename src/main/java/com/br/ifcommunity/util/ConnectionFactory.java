@@ -18,7 +18,7 @@ public class ConnectionFactory {
 
             return DriverManager.getConnection(url, user, password);
         } catch (SQLException e) {
-            System.out.println(e.getSQLState());
+            System.out.println(e);
         } catch (ClassNotFoundException e) {
             System.out.println(e.getCause());
         }

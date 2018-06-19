@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -27,7 +28,25 @@ public class MatterController {
             matterlist = MatterDAO.getAllMatters();
 
             if (matterlist.size() == 0) {
-                ResponseEntity.status(HttpStatus.NO_CONTENT).body(matterlist.add(new Matter(0,"ERRO AO BUSCA MATERIAS", 0)));
+                ResponseEntity.status(HttpStatus.NO_CONTENT).body(matterlist.add(new Matter(0,"ERRO AO BUSCAR MATERIAS", 0)));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.ok().body(matterlist);
+    }
+
+    @RequestMapping(value = "/user",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ArrayList<Matter>> getMatterById(@RequestParam int studentId) {
+        ArrayList<Matter> matterlist = null;
+
+        try {
+            matterlist = MatterDAO.getUserMatters(studentId);
+
+            if (matterlist.size() == 0) {
+                ResponseEntity.status(HttpStatus.NO_CONTENT).body(matterlist.add(new Matter(0,"ERRO AO BUSCAR MATERIAS", 0)));
             }
 
         } catch (SQLException e) {
