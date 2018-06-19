@@ -14,7 +14,7 @@ import java.sql.SQLException;
 
 @Controller
 @RequestMapping(value = "/user")
-public class UserService {
+public class UserController {
 
     @RequestMapping(value = "/register", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> registerUser(@RequestBody User user) {
