@@ -30,7 +30,7 @@ public class PasswordValidation {
 
         // Verifica se a senha tem os requisitos minimos
         Pattern pattAlphaNum = Pattern.compile("^[a-zA-Z0-9$@$!%*?&+-]+$");
-        if (!pattAlphaNum.matcher(password).matches()) {
+        if (!pattAlphaNum.matcher(password).find()) {
             errors += " A senha não atende aos requisitos!";
         }
 
