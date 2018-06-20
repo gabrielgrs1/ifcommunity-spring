@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.sql.SQLException;
 
@@ -69,12 +70,13 @@ public class UserController {
         return ResponseEntity.ok().body(user);
     }
 
-    @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> verifyIsNotRegister(@RequestBody String verifyString) {
+    @RequestMapping(value = "/verify", method = RequestMethod.GET)
+    public ResponseEntity<String> verifyIsNotRegister(@RequestParam String verifyString) {
         String verifyError = "";
+        System.out.println(verifyString);
 
         try {
-            verifyError = UserDAO.verifyIsNotRegister(verifyString); // Case update Student
+            verifyError = UserDAO.verifyIsNotRegister(verifyString);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -82,6 +84,8 @@ public class UserController {
 
         return ResponseEntity.ok().body(verifyError);
     }
+
+
 
 
 }
