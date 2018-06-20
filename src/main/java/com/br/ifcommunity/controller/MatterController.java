@@ -3,14 +3,13 @@ package com.br.ifcommunity.controller;
 
 import com.br.ifcommunity.dao.MatterDAO;
 import com.br.ifcommunity.model.Matter;
+import com.br.ifcommunity.model.MatterUser;
 import com.br.ifcommunity.model.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -28,7 +27,7 @@ public class MatterController {
             matterlist = MatterDAO.getAllMatters();
 
             if (matterlist.size() == 0) {
-                ResponseEntity.status(HttpStatus.NO_CONTENT).body(matterlist.add(new Matter(0,"ERRO AO BUSCAR MATERIAS", 0)));
+                ResponseEntity.status(HttpStatus.NO_CONTENT).body(matterlist.add(new Matter(0, "ERRO AO BUSCAR MATERIAS", 0)));
             }
 
         } catch (SQLException e) {
@@ -38,7 +37,7 @@ public class MatterController {
         return ResponseEntity.ok().body(matterlist);
     }
 
-    @RequestMapping(value = "/user",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ArrayList<Matter>> getMatterById(@RequestParam int studentId) {
         ArrayList<Matter> matterlist = null;
 
@@ -46,7 +45,7 @@ public class MatterController {
             matterlist = MatterDAO.getUserMatters(studentId);
 
             if (matterlist.size() == 0) {
-                ResponseEntity.status(HttpStatus.NO_CONTENT).body(matterlist.add(new Matter(0,"ERRO AO BUSCAR MATERIAS", 0)));
+                ResponseEntity.status(HttpStatus.NO_CONTENT).body(matterlist.add(new Matter(0, "ERRO AO BUSCAR MATERIAS", 0)));
             }
 
         } catch (SQLException e) {
@@ -55,4 +54,21 @@ public class MatterController {
 
         return ResponseEntity.ok().body(matterlist);
     }
+
+
+
+    @RequestMapping(value = "/user", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Boolean> updateMattersUser(@RequestBody MatterUser responseBody) {
+
+        try {
+            MatterDAO.updateMattersUser(responseBody);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.ok().body(true);
+    }
+
+
+
 }
