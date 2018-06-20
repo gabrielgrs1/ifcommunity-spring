@@ -2,6 +2,7 @@ package com.br.ifcommunity.dao;
 
 import com.br.ifcommunity.model.User;
 import com.br.ifcommunity.regex.PasswordValidation;
+import com.br.ifcommunity.regex.VerificationRegister;
 import com.br.ifcommunity.util.ConnectionFactory;
 
 import java.sql.Connection;
@@ -203,12 +204,56 @@ public class UserDAO {
         connection.close();
         return student;
     }
+
+    public static String verifyIsNotRegister(String verifyString) throws SQLException {
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        String SQLQuery = null;
+        Connection connection = ConnectionFactory.getConnection();
+
+        if (verifyString.contains("@")) {
+            SQLQuery = "SELECT * FROM TB_USUARIO WHERE EMAIL = ?";
+
+            preparedStatement = connection.prepareCall(SQLQuery);
+            preparedStatement.setString(1, verifyString);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                return "Email já cadastrado!";
+            }
+        } else if (VerificationRegister.enrolledNumberValidate(verifyString)) {
+            SQLQuery = "SELECT * FROM TB_ALUNO WHERE MATRICULA = ?";
+
+            preparedStatement = connection.prepareCall(SQLQuery);
+            preparedStatement.setString(1, verifyString);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                return "Matricula já cadastrada!";
+            }
+        } else {
+            SQLQuery = "SELECT * FROM TB_USUARIO WHERE USUARIO = ?";
+
+            preparedStatement = connection.prepareCall(SQLQuery);
+            preparedStatement.setString(1, verifyString);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                return "Usuario já cadastrado!";
+            }
+        }
+
+        return "Pode cadastrar!";
+    }
 }
 
 
 //class main {
 //    public static void main(String[] args) {
-//        User user = UserDAO.updateStudent(new User(2, "gabriel_teste@hotmail.com", "Gabriel Teste", "Telefone teste"));
-//        System.out.println(user);
+//        try {
+//            System.out.println(UserDAO.verifyIsNotRegister("01858618657-"));
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
 //    }
 //}

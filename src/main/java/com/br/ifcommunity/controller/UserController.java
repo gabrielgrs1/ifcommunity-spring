@@ -68,5 +68,21 @@ public class UserController {
 
         return ResponseEntity.ok().body(user);
     }
+
+    @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> verifyIsNotRegister(@RequestBody String verifyString) {
+        String verifyError = "";
+
+        try {
+            verifyError = UserDAO.verifyIsNotRegister(verifyString); // Case update Student
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.ok().body(verifyError);
+    }
+
+
 }
 
