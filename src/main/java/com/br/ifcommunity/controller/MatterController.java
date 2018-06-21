@@ -4,7 +4,6 @@ package com.br.ifcommunity.controller;
 import com.br.ifcommunity.dao.MatterDAO;
 import com.br.ifcommunity.model.Matter;
 import com.br.ifcommunity.model.MatterUser;
-import com.br.ifcommunity.model.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -58,7 +57,7 @@ public class MatterController {
 
 
     @RequestMapping(value = "/user", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Boolean> updateMattersUser(@RequestBody MatterUser responseBody) {
+    public ResponseEntity.BodyBuilder updateMattersUser(@RequestBody MatterUser responseBody) {
 
         try {
             MatterDAO.updateMattersUser(responseBody);
@@ -66,7 +65,7 @@ public class MatterController {
             e.printStackTrace();
         }
 
-        return ResponseEntity.ok().body(true);
+        return ResponseEntity.status(HttpStatus.OK);
     }
 
 
