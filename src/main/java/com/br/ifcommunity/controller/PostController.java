@@ -2,17 +2,16 @@ package com.br.ifcommunity.controller;
 
 import com.br.ifcommunity.dao.PostDAO;
 import com.br.ifcommunity.model.Post;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 public class PostController {
@@ -26,15 +25,18 @@ public class PostController {
             e.printStackTrace();
         }
 
-        return ResponseEntity.ok().body(listPost);
+        return ResponseEntity.ok().body(Objects.requireNonNull(listPost));
     }
 
-    @RequestMapping(value = "/post", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
-    public void doPost(@RequestBody Post postRequestBody) {
+    @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(value = "/post", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity.BodyBuilder doPost(@RequestBody Post postRequestBody) {
         try {
             PostDAO.addPost(postRequestBody);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return ResponseEntity.status(HttpStatus.OK);
     }
 }

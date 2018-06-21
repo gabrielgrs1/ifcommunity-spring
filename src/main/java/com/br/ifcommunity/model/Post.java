@@ -16,7 +16,49 @@ public class Post implements Serializable {
     private String registerDate;
     private String updateDate;
 
+    public void setPostId(int postId) {
+        this.postId = postId;
+    }
 
+    public void setAuthorId(int authorId) {
+        this.authorId = authorId;
+    }
+
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
+    }
+
+    public void setMatterName(String matterName) {
+        this.matterName = matterName;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setPostText(String postText) {
+        this.postText = postText;
+    }
+
+    public void setProgrammingLanguage(String programmingLanguage) {
+        this.programmingLanguage = programmingLanguage;
+    }
+
+    public void setSpam(boolean spam) {
+        isSpam = spam;
+    }
+
+    public void setRegisterDate(String registerDate) {
+        this.registerDate = registerDate;
+    }
+
+    public void setUpdateDate(String updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public Post() {
+
+    }
 
     public Post(int postId, String matterName, String authorName, String title, String postText, String programmingLanguage, String registerDate) {
         this.postId = postId;
@@ -28,6 +70,13 @@ public class Post implements Serializable {
         this.registerDate = registerDate;
     }
 
+    public Post(int authorId, String matterName, String title, String programmingLanguage, String postText) {
+        this.authorId = authorId;
+        this.matterName = matterName;
+        this.title = title;
+        this.programmingLanguage = programmingLanguage;
+        this.postText = postText;
+    }
 
     public String getAuthorName() {
         return authorName;
