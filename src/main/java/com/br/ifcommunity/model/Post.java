@@ -6,8 +6,9 @@ import java.util.Objects;
 public class Post implements Serializable {
 
     private int postId;
-    private int matterId;
-    private User author;
+    private int authorId;
+    private String authorName;
+    private String matterName;
     private String title;
     private String postText;
     private String programmingLanguage;
@@ -15,96 +16,67 @@ public class Post implements Serializable {
     private String registerDate;
     private String updateDate;
 
-    public Post(int postId, int matterId, User author, String title, String postText, String programmingLanguage, boolean isSpam, String registerDate, String updateDate) {
+
+
+    public Post(int postId, String matterName, String authorName, String title, String postText, String programmingLanguage, String registerDate) {
         this.postId = postId;
-        this.matterId = matterId;
-        this.author = author;
+        this.matterName = matterName;
+        this.authorName = authorName;
         this.title = title;
         this.postText = postText;
         this.programmingLanguage = programmingLanguage;
-        this.isSpam = isSpam;
         this.registerDate = registerDate;
-        this.updateDate = updateDate;
+    }
+
+
+    public String getAuthorName() {
+        return authorName;
     }
 
     public int getPostId() {
+
         return postId;
     }
 
-    public void setPostId(int postId) {
-        this.postId = postId;
+    public String getMatterName() {
+        return matterName;
     }
 
-    public int getMatterId() {
-        return matterId;
-    }
-
-    public void setMatterId(int matterId) {
-        this.matterId = matterId;
-    }
-
-    public User getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(User author) {
-        this.author = author;
+    public int getAuthorId() {
+        return authorId;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getPostText() {
         return postText;
-    }
-
-    public void setPostText(String postText) {
-        this.postText = postText;
     }
 
     public String getProgrammingLanguage() {
         return programmingLanguage;
     }
 
-    public void setProgrammingLanguage(String programmingLanguage) {
-        this.programmingLanguage = programmingLanguage;
-    }
-
     public boolean isSpam() {
         return isSpam;
-    }
-
-    public void setSpam(boolean spam) {
-        isSpam = spam;
     }
 
     public String getRegisterDate() {
         return registerDate;
     }
 
-    public void setRegisterDate(String registerDate) {
-        this.registerDate = registerDate;
-    }
-
     public String getUpdateDate() {
         return updateDate;
-    }
-
-    public void setUpdateDate(String updateDate) {
-        this.updateDate = updateDate;
     }
 
     @Override
     public String toString() {
         return "Post{" +
                 "postId=" + postId +
-                ", matterId=" + matterId +
-                ", author=" + author +
+                ", authorId=" + authorId +
+                ", authorName='" + authorName + '\'' +
+                ", matterName='" + matterName + '\'' +
                 ", title='" + title + '\'' +
                 ", postText='" + postText + '\'' +
                 ", programmingLanguage='" + programmingLanguage + '\'' +
@@ -120,9 +92,10 @@ public class Post implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         Post post = (Post) o;
         return postId == post.postId &&
-                matterId == post.matterId &&
+                authorId == post.authorId &&
                 isSpam == post.isSpam &&
-                Objects.equals(author, post.author) &&
+                Objects.equals(authorName, post.authorName) &&
+                Objects.equals(matterName, post.matterName) &&
                 Objects.equals(title, post.title) &&
                 Objects.equals(postText, post.postText) &&
                 Objects.equals(programmingLanguage, post.programmingLanguage) &&
@@ -133,6 +106,6 @@ public class Post implements Serializable {
     @Override
     public int hashCode() {
 
-        return Objects.hash(postId, matterId, author, title, postText, programmingLanguage, isSpam, registerDate, updateDate);
+        return Objects.hash(postId, authorId, authorName, matterName, title, postText, programmingLanguage, isSpam, registerDate, updateDate);
     }
 }
