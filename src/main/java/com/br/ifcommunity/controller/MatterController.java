@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 
 @Controller
+@CrossOrigin(origins = "*")
 @RequestMapping(value = "/matter")
 public class MatterController {
 

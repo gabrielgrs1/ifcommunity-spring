@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Controller
+@CrossOrigin(origins = "*")
 public class PostController {
     @RequestMapping(value = "/post", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<Post>> getPost(@RequestParam String name, String lastPost) {
