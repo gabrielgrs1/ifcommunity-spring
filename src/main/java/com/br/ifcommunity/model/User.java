@@ -117,6 +117,26 @@ public class User implements Serializable {
         this.website = website;
     }
 
+    public int getStudentId() {
+        return studentId;
+    }
+
+    public int getTeacherId() {
+        return teacherId;
+    }
+
+    public int getAdministratorId() {
+        return administratorId;
+    }
+
+    public int getPermission() {
+        return permission;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
     public int getUserId() {
         return userId;
     }
