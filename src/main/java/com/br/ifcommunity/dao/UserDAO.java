@@ -170,6 +170,8 @@ public class UserDAO {
         Connection connection = ConnectionFactory.getConnection();
         User student = null;
 
+        System.out.println("User student request body: " + studentRequestBody);
+
         String SQLQuery = "CALL SP_ATUALIZA_PERFIL(?, ?, ?, ?)";
 
         preparedStatement = connection.prepareCall(SQLQuery);
@@ -199,6 +201,7 @@ public class UserDAO {
                     resultSet.getInt("PERIODO"),
                     resultSet.getString("MATRICULA")
             );
+            System.out.println("User dentro do recupera aluno passando novo email: " + student);
         }
 
         connection.close();
