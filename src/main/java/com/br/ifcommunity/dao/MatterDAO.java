@@ -2,7 +2,6 @@ package com.br.ifcommunity.dao;
 
 import com.br.ifcommunity.model.Matter;
 import com.br.ifcommunity.model.MatterUser;
-import com.br.ifcommunity.model.User;
 import com.br.ifcommunity.util.ConnectionFactory;
 
 import java.sql.Connection;
@@ -37,7 +36,7 @@ public class MatterDAO {
         return mattersList;
     }
 
-    public static ArrayList<Matter> getUserMatters(int idUser) throws SQLException {
+    public static ArrayList<Matter> getUserMatters(int studentId) throws SQLException {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         Connection connection = ConnectionFactory.getConnection();
@@ -48,7 +47,7 @@ public class MatterDAO {
                 " WHERE ID_ALUNO = ?";
 
         preparedStatement = connection.prepareStatement(SQLQuery);
-        preparedStatement.setInt(1, idUser);
+        preparedStatement.setInt(1, studentId);
         resultSet = preparedStatement.executeQuery();
 
         while (resultSet.next()) {
