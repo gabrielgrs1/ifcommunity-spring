@@ -56,8 +56,7 @@ public class MatterController {
     }
 
 
-
-    @RequestMapping(value = "/user", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity.BodyBuilder updateMattersUser(@RequestBody MatterUser responseBody) {
 
         try {
@@ -68,7 +67,6 @@ public class MatterController {
 
         return ResponseEntity.status(HttpStatus.OK);
     }
-
 
 
 }
