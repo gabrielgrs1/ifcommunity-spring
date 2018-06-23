@@ -72,7 +72,8 @@ public class MatterDAO {
                 responseBody.getMatter3(),
                 responseBody.getMatter4(),
                 responseBody.getMatter5(),
-                responseBody.getMatter6());
+                responseBody.getMatter6(),
+                responseBody.getMatter7());
 
         SQLQuery = "DELETE FROM TB_MATERIA_ALUNO WHERE ID_ALUNO = ?";
         preparedStatement = connection.prepareCall(SQLQuery);
