@@ -30,11 +30,12 @@ public class UserController {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        } else if (user.getTypeUser() == 2) { // Case the user is Teacher
-
-        } else { // Case the user is Administrator
-
         }
+//        else if (user.getTypeUser() == 2) { // Case the user is Teacher
+//
+//        } else { // Case the user is Administrator
+//
+//        }
 
 
         return ResponseEntity.ok().body(user);
@@ -82,10 +83,6 @@ public class UserController {
 
         return ResponseEntity.ok().body(verifyError);
     }
-
-
-
-
 }
 
 
