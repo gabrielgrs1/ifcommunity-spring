@@ -17,6 +17,9 @@ public class ChartDAO {
         Connection connection = ConnectionFactory.getConnection();
         ArrayList<Chart> chartList = new ArrayList<>();
         Chart chart = null;
+        int like = 0;
+        int deslike = 0;
+
 
         String SQLQuery = "SELECT TB_POSTAGEM.LINGUAGEM_POSTAGEM, TB_MATERIA.NOME_MATERIA,"
                 + " COUNT(LINGUAGEM_POSTAGEM) as CONTAGEM_POSTAGEM FROM TB_POSTAGEM"
@@ -37,6 +40,24 @@ public class ChartDAO {
             chartList.add(chart);
         }
 
+        SQLQuery = "SELECT * FROM TB_CONTAGEM_LIKE " +
+                " INNER JOIN TB_POSTAGEM TP on TB_CONTAGEM_LIKE.ID_POSTAGEM = TP.ID"
+                + " WHERE TP.ID_USUARIO = ? ";
+
+        preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
+        preparedStatement.setInt(1, userId);
+        resultSet = preparedStatement.executeQuery();
+
+        while (resultSet.next()) {
+            if (resultSet.getInt("LIKE_DESLIKE") == 0) {
+                like++;
+            } else {
+                deslike++;
+            }
+        }
+
+        chart = new Chart(like, deslike);
+        chartList.add(chart);
 
         connection.close();
 

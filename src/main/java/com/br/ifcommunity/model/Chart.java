@@ -6,6 +6,9 @@ public class Chart {
     private String programmingLanguage;
     private int countManyPostsTime;
     private String matterName;
+    private int likes;
+    private int deslikes;
+
 
     public Chart() {
     }
@@ -14,11 +17,17 @@ public class Chart {
         this.matterName = matterName;
     }
 
+    public Chart(int likes, int deslikes) {
+        this.likes = likes;
+        this.deslikes = deslikes;
+    }
+
     public Chart(String programmingLanguage, int countManyPostsTime, String matterName) {
         this.programmingLanguage = programmingLanguage;
         this.countManyPostsTime = countManyPostsTime;
         this.matterName = matterName;
     }
+
     public String getProgrammingLanguage() {
         return programmingLanguage;
     }
@@ -43,20 +52,20 @@ public class Chart {
         this.matterName = matterName;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Chart chart = (Chart) o;
-        return countManyPostsTime == chart.countManyPostsTime &&
-                Objects.equals(programmingLanguage, chart.programmingLanguage) &&
-                Objects.equals(matterName, chart.matterName);
+    public int getLikes() {
+        return likes;
     }
 
-    @Override
-    public int hashCode() {
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
 
-        return Objects.hash(programmingLanguage, countManyPostsTime, matterName);
+    public int getDeslikes() {
+        return deslikes;
+    }
+
+    public void setDeslikes(int deslikes) {
+        this.deslikes = deslikes;
     }
 
     @Override
@@ -65,7 +74,26 @@ public class Chart {
                 "programmingLanguage='" + programmingLanguage + '\'' +
                 ", countManyPostsTime=" + countManyPostsTime +
                 ", matterName='" + matterName + '\'' +
+                ", likes=" + likes +
+                ", deslikes=" + deslikes +
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Chart chart = (Chart) o;
+        return countManyPostsTime == chart.countManyPostsTime &&
+                likes == chart.likes &&
+                deslikes == chart.deslikes &&
+                Objects.equals(programmingLanguage, chart.programmingLanguage) &&
+                Objects.equals(matterName, chart.matterName);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(programmingLanguage, countManyPostsTime, matterName, likes, deslikes);
+    }
 }
