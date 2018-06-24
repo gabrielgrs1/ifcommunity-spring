@@ -1,5 +1,6 @@
 package com.br.ifcommunity.dao;
 
+import com.br.ifcommunity.model.LikeDeslikePost;
 import com.br.ifcommunity.model.Post;
 import com.br.ifcommunity.util.ConnectionFactory;
 
@@ -28,7 +29,6 @@ public class PostDAO {
             System.out.println("ID USUARIO = " + userId);
             System.out.println("ID ALUNO = " + resultSet.getInt("ID"));
         }
-
 
 
         SQLQuery = "SELECT * FROM TB_MATERIA WHERE NOME_MATERIA = ?";
@@ -124,6 +124,40 @@ public class PostDAO {
         connection.close();
 
         return listPost;
+    }
+
+    public static int likeDeslike(LikeDeslikePost likeStructure) throws SQLException {
+        PreparedStatement preparedStatement;
+        Connection connection = ConnectionFactory.getConnection();
+        ResultSet resultSet = null;
+        int resultSetInt = 0;
+
+        System.out.println(likeStructure);
+
+        String SQLQuery = "SELECT * FROM TB_CONTAGEM_LIKE WHERE ID_POSTAGEM = ? AND ID_USUARIO = ?";
+        preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
+        preparedStatement.setInt(1, likeStructure.getIdPost());
+        preparedStatement.setInt(2, likeStructure.getIdAuthor());
+        resultSet = preparedStatement.executeQuery();
+
+        while (resultSet.next()) {
+            SQLQuery = "DELETE FROM TB_CONTAGEM_LIKE WHERE ID = ?";
+            preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
+            preparedStatement.setInt(1, resultSet.getInt("ID"));
+            resultSetInt = preparedStatement.executeUpdate();
+        }
+
+
+        if (likeStructure.isExclude() != 1) {
+            SQLQuery = "INSERT INTO TB_CONTAGEM_LIKE (ID_POSTAGEM, ID_USUARIO, LIKE_DESLIKE) VALUES (?, ?, ?)";
+            preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
+            preparedStatement.setInt(1, likeStructure.getIdPost());
+            preparedStatement.setInt(2, likeStructure.getIdAuthor());
+            preparedStatement.setInt(3, likeStructure.getIsLike());
+            resultSetInt = preparedStatement.executeUpdate();
+        }
+
+        return resultSetInt;
     }
 }
 
