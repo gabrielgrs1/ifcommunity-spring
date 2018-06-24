@@ -9,17 +9,19 @@ public class Comment implements Serializable {
     private int authorId;
     private String authorName;
     private String commentText;
-    private boolean isExcluded;
     private String registerDate;
 
     public Comment() {
     }
 
-    public Comment(int postId, String authorName, String commentText, boolean isExcluded, String registerDate) {
+    public Comment(String commentText) {
+        this.commentText = commentText;
+    }
+
+    public Comment(int postId, String authorName, String commentText, String registerDate) {
         this.postId = postId;
         this.authorName = authorName;
         this.commentText = commentText;
-        this.isExcluded = isExcluded;
         this.registerDate = registerDate;
     }
 
@@ -45,9 +47,6 @@ public class Comment implements Serializable {
         return commentText;
     }
 
-    public boolean isExcluded() {
-        return isExcluded;
-    }
 
     public String getRegisterDate() {
         return registerDate;
@@ -60,7 +59,6 @@ public class Comment implements Serializable {
                 ", authorId=" + authorId +
                 ", authorName='" + authorName + '\'' +
                 ", commentText='" + commentText + '\'' +
-                ", isExcluded=" + isExcluded +
                 ", registerDate='" + registerDate + '\'' +
                 '}';
     }
@@ -72,7 +70,6 @@ public class Comment implements Serializable {
         Comment comment = (Comment) o;
         return postId == comment.postId &&
                 authorId == comment.authorId &&
-                isExcluded == comment.isExcluded &&
                 Objects.equals(authorName, comment.authorName) &&
                 Objects.equals(commentText, comment.commentText) &&
                 Objects.equals(registerDate, comment.registerDate);
@@ -81,6 +78,6 @@ public class Comment implements Serializable {
     @Override
     public int hashCode() {
 
-        return Objects.hash(postId, authorId, authorName, commentText, isExcluded, registerDate);
+        return Objects.hash(postId, authorId, authorName, commentText, registerDate);
     }
 }

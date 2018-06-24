@@ -6,12 +6,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 @Controller
 @CrossOrigin(origins = "*")
@@ -31,5 +29,23 @@ public class CommentController {
         }
 
         return ResponseEntity.ok().body(true);
+    }
+
+    @RequestMapping(value = "/comment", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ArrayList<Comment>> comment(@RequestParam int postId) {
+        ArrayList<Comment> commentList = new ArrayList<>();
+
+        try {
+            commentList = CommentDAO.getComments(postId);
+
+            if (commentList.size() == 0) {
+                commentList.add(new Comment("Falha ao buscar os comentários, ou nenhum comentário foi encontrado!"));
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(commentList);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.ok().body(commentList);
     }
 }
