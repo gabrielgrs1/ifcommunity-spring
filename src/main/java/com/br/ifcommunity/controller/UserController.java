@@ -41,7 +41,7 @@ public class UserController {
         return ResponseEntity.ok().body(user);
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE,  consumes = "application/json")
+    @RequestMapping(value = "/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = "application/json")
     public ResponseEntity<User> login(@RequestBody User requestBody) {
         User user = null;
 
@@ -78,10 +78,9 @@ public class UserController {
         return ResponseEntity.ok().body(user);
     }
 
-    @RequestMapping(value = "/verify", method = RequestMethod.GET)
+    @RequestMapping(value = "/verify", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> verifyIsNotRegister(@RequestParam String verifyString) {
         String verifyError = "";
-        System.out.println(verifyString);
 
         try {
             verifyError = UserDAO.verifyIsNotRegister(verifyString);
@@ -91,6 +90,22 @@ public class UserController {
         }
 
         return ResponseEntity.ok().body(verifyError);
+    }
+
+    @RequestMapping(value = "/photo", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Boolean> uploadPhoto(@RequestBody User user) {
+        int isSucess = 0;
+        try {
+            isSucess = UserDAO.uploadPhoto(user);
+
+            if (isSucess == 0) {
+                return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(false);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.ok().body(true);
     }
 }
 

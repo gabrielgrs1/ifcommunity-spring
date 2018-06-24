@@ -100,7 +100,8 @@ public class UserDAO {
                     resultSet.getString("EMAIL"),
                     resultSet.getInt("TIPO_DE_REGISTRO"),
                     resultSet.getInt("PERIODO"),
-                    resultSet.getString("MATRICULA")
+                    resultSet.getString("MATRICULA"),
+                    null
             );
         }
         connection.close();
@@ -139,23 +140,25 @@ public class UserDAO {
                             resultSet.getString("EMAIL"),
                             resultSet.getInt("TIPO_DE_REGISTRO"),
                             resultSet.getInt("PERIODO"),
-                            resultSet.getString("MATRICULA")
+                            resultSet.getString("MATRICULA"),
+                            resultSet.getString("HASH_FOTO")
                     );
-                } else if (resultSet.getInt("TIPO_DE_REGISTRO") == 2) { // Case the user is Teacher
-                    user = new User(
-                            resultSet.getInt("ID_USUARIO"),
-                            resultSet.getInt("ID_PROFESSOR"),
-                            resultSet.getString("USUARIO"),
-                            resultSet.getString("NOME"),
-                            resultSet.getString("TELEFONE"),
-                            resultSet.getString("EMAIL"),
-                            resultSet.getInt("TIPO_DE_REGISTRO"),
-                            resultSet.getInt("PERIODO"),
-                            resultSet.getString("MATRICULA")
-                    );
-                } else { // Case the user is Administrator
-
                 }
+//                else if (resultSet.getInt("TIPO_DE_REGISTRO") == 2) { // Case the user is Teacher
+//                    user = new User(
+//                            resultSet.getInt("ID_USUARIO"),
+//                            resultSet.getInt("ID_PROFESSOR"),
+//                            resultSet.getString("USUARIO"),
+//                            resultSet.getString("NOME"),
+//                            resultSet.getString("TELEFONE"),
+//                            resultSet.getString("EMAIL"),
+//                            resultSet.getInt("TIPO_DE_REGISTRO"),
+//                            resultSet.getInt("PERIODO"),
+//                            resultSet.getString("MATRICULA")
+//                    );
+//                } else { // Case the user is Administrator
+//
+//                }
             }
         }
 
@@ -199,7 +202,8 @@ public class UserDAO {
                     resultSet.getString("EMAIL"),
                     resultSet.getInt("TIPO_DE_REGISTRO"),
                     resultSet.getInt("PERIODO"),
-                    resultSet.getString("MATRICULA")
+                    resultSet.getString("MATRICULA"),
+                    resultSet.getString("HASH_FOTO")
             );
             System.out.println("User dentro do recupera aluno passando novo email: " + student);
         }
@@ -247,6 +251,24 @@ public class UserDAO {
         }
 
         return "Pode cadastrar!";
+    }
+
+    public static int uploadPhoto(User user) throws SQLException {
+        PreparedStatement preparedStatement = null;
+        int resultSet = 0;
+        Connection connection = ConnectionFactory.getConnection();
+
+        String SQLQuery = "UPDATE TB_USUARIO SET HASH_FOTO = ? WHERE ID = ?";
+
+        preparedStatement = connection.prepareCall(SQLQuery);
+
+        preparedStatement.setString(1, user.getPhotoHash());
+        preparedStatement.setInt(2, user.getUserId());
+
+        resultSet = preparedStatement.executeUpdate();
+
+        connection.close();
+        return resultSet;
     }
 }
 

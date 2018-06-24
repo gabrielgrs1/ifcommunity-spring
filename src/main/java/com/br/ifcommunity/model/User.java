@@ -18,6 +18,7 @@ public class User implements Serializable {
     private String enrolledNumber;
     private int permission;
     private String website;
+    private String photoHash;
 
 
     public User() {
@@ -80,7 +81,9 @@ public class User implements Serializable {
     }
 
     // Dashboard constructor
-    public User(int userId, int studentId, String user, String name, String phone, String mail, int typeUser, int period, String enrolledNumber) {
+
+
+    public User(int userId, int studentId, String user, String name, String phone, String mail, int typeUser, int period, String enrolledNumber, String photoHash) {
         this.userId = userId;
         this.studentId = studentId;
         this.user = user;
@@ -90,6 +93,7 @@ public class User implements Serializable {
         this.typeUser = typeUser;
         this.period = period;
         this.enrolledNumber = enrolledNumber;
+        this.photoHash = photoHash;
     }
 
     // ADMIN constructor
@@ -181,6 +185,10 @@ public class User implements Serializable {
         return enrolledNumber;
     }
 
+    public String getPhotoHash() {
+        return photoHash;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -198,6 +206,7 @@ public class User implements Serializable {
                 ", enrolledNumber='" + enrolledNumber + '\'' +
                 ", permission=" + permission +
                 ", website='" + website + '\'' +
+                ", photoHash='" + photoHash + '\'' +
                 '}';
     }
 
@@ -219,12 +228,13 @@ public class User implements Serializable {
                 Objects.equals(phone, user1.phone) &&
                 Objects.equals(mail, user1.mail) &&
                 Objects.equals(enrolledNumber, user1.enrolledNumber) &&
-                Objects.equals(website, user1.website);
+                Objects.equals(website, user1.website) &&
+                Objects.equals(photoHash, user1.photoHash);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(userId, studentId, teacherId, administratorId, user, password, name, phone, mail, typeUser, period, enrolledNumber, permission, website);
+        return Objects.hash(userId, studentId, teacherId, administratorId, user, password, name, phone, mail, typeUser, period, enrolledNumber, permission, website, photoHash);
     }
 }
