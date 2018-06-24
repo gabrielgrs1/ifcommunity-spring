@@ -1,6 +1,7 @@
 package com.br.ifcommunity.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Post implements Serializable {
@@ -15,108 +16,107 @@ public class Post implements Serializable {
     private boolean isSpam;
     private String registerDate;
     private String updateDate;
-
-    public void setPostId(int postId) {
-        this.postId = postId;
-    }
-
-    public void setAuthorId(int authorId) {
-        this.authorId = authorId;
-    }
-
-    public void setAuthorName(String authorName) {
-        this.authorName = authorName;
-    }
-
-    public void setMatterName(String matterName) {
-        this.matterName = matterName;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setPostText(String postText) {
-        this.postText = postText;
-    }
-
-    public void setProgrammingLanguage(String programmingLanguage) {
-        this.programmingLanguage = programmingLanguage;
-    }
-
-    public void setSpam(boolean spam) {
-        isSpam = spam;
-    }
-
-    public void setRegisterDate(String registerDate) {
-        this.registerDate = registerDate;
-    }
-
-    public void setUpdateDate(String updateDate) {
-        this.updateDate = updateDate;
-    }
+    private ArrayList<LikeDeslikePost> likeDeslikePosts;
 
     public Post() {
-
     }
 
-    public Post(int postId, String matterName, String authorName, String title, String postText, String programmingLanguage, String registerDate) {
+    public Post(int postId, String authorName, String matterName, String title, String postText, String programmingLanguage, String registerDate) {
         this.postId = postId;
-        this.matterName = matterName;
         this.authorName = authorName;
+        this.matterName = matterName;
         this.title = title;
         this.postText = postText;
         this.programmingLanguage = programmingLanguage;
         this.registerDate = registerDate;
-    }
-
-    public Post(int authorId, String matterName, String title, String programmingLanguage, String postText) {
-        this.authorId = authorId;
-        this.matterName = matterName;
-        this.title = title;
-        this.programmingLanguage = programmingLanguage;
-        this.postText = postText;
-    }
-
-    public String getAuthorName() {
-        return authorName;
     }
 
     public int getPostId() {
-
         return postId;
     }
 
-    public String getMatterName() {
-        return matterName;
+    public void setPostId(int postId) {
+        this.postId = postId;
     }
 
     public int getAuthorId() {
         return authorId;
     }
 
+    public void setAuthorId(int authorId) {
+        this.authorId = authorId;
+    }
+
+    public String getAuthorName() {
+        return authorName;
+    }
+
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
+    }
+
+    public String getMatterName() {
+        return matterName;
+    }
+
+    public void setMatterName(String matterName) {
+        this.matterName = matterName;
+    }
+
     public String getTitle() {
         return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getPostText() {
         return postText;
     }
 
+    public void setPostText(String postText) {
+        this.postText = postText;
+    }
+
     public String getProgrammingLanguage() {
         return programmingLanguage;
+    }
+
+    public void setProgrammingLanguage(String programmingLanguage) {
+        this.programmingLanguage = programmingLanguage;
     }
 
     public boolean isSpam() {
         return isSpam;
     }
 
+    public void setSpam(boolean spam) {
+        isSpam = spam;
+    }
+
     public String getRegisterDate() {
         return registerDate;
     }
 
+    public void setRegisterDate(String registerDate) {
+        this.registerDate = registerDate;
+    }
+
     public String getUpdateDate() {
         return updateDate;
+    }
+
+    public void setUpdateDate(String updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public ArrayList<LikeDeslikePost> getLikeDeslikePosts() {
+        return likeDeslikePosts;
+    }
+
+    public void setLikeDeslikePosts(ArrayList<LikeDeslikePost> likeDeslikePosts) {
+        this.likeDeslikePosts = likeDeslikePosts;
     }
 
     @Override

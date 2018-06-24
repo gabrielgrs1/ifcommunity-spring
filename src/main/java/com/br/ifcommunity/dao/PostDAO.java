@@ -118,6 +118,8 @@ public class PostDAO {
                     resultSet.getString("LINGUAGEM_POSTAGEM"),
                     resultSet.getString("TB_POSTAGEM.DT_REGISTRO"));
 
+            post.setLikeDeslikePosts(getQtdLike(resultSet.getInt("TB_POSTAGEM.ID")));
+
             listPost.add(post);
         }
 
@@ -132,32 +134,60 @@ public class PostDAO {
         ResultSet resultSet = null;
         int resultSetInt = 0;
 
-        System.out.println(likeStructure);
-
-        String SQLQuery = "SELECT * FROM TB_CONTAGEM_LIKE WHERE ID_POSTAGEM = ? AND ID_USUARIO = ?";
+        String SQLQuery = "SELECT * FROM TB_CONTAGEM_LIKE" +
+                " INNER JOIN TB_POSTAGEM TP on TB_CONTAGEM_LIKE.ID_POSTAGEM = TP.ID " +
+                "WHERE ID_POSTAGEM = ? AND TB_CONTAGEM_LIKE.ID_USUARIO = ?";
         preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
         preparedStatement.setInt(1, likeStructure.getIdPost());
         preparedStatement.setInt(2, likeStructure.getIdAuthor());
         resultSet = preparedStatement.executeQuery();
 
         while (resultSet.next()) {
-            SQLQuery = "DELETE FROM TB_CONTAGEM_LIKE WHERE ID = ?";
-            preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
-            preparedStatement.setInt(1, resultSet.getInt("ID"));
-            resultSetInt = preparedStatement.executeUpdate();
-        }
+            if (likeStructure.isExclude() != 1 && resultSet.getInt("TB_POSTAGEM.ID_USUARIO") != likeStructure.getIdAuthor()) {
+                SQLQuery = "DELETE FROM TB_CONTAGEM_LIKE WHERE ID = ?";
+                preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
+                preparedStatement.setInt(1, resultSet.getInt("ID"));
+                resultSetInt = preparedStatement.executeUpdate();
 
 
-        if (likeStructure.isExclude() != 1) {
-            SQLQuery = "INSERT INTO TB_CONTAGEM_LIKE (ID_POSTAGEM, ID_USUARIO, LIKE_DESLIKE) VALUES (?, ?, ?)";
-            preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
-            preparedStatement.setInt(1, likeStructure.getIdPost());
-            preparedStatement.setInt(2, likeStructure.getIdAuthor());
-            preparedStatement.setInt(3, likeStructure.getIsLike());
-            resultSetInt = preparedStatement.executeUpdate();
+                SQLQuery = "INSERT INTO TB_CONTAGEM_LIKE (ID_POSTAGEM, ID_USUARIO, LIKE_DESLIKE) VALUES (?, ?, ?)";
+                preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
+                preparedStatement.setInt(1, likeStructure.getIdPost());
+                preparedStatement.setInt(2, likeStructure.getIdAuthor());
+                preparedStatement.setInt(3, likeStructure.getIsLike());
+                resultSetInt = preparedStatement.executeUpdate();
+            }
         }
+
 
         return resultSetInt;
+    }
+
+    private static ArrayList<LikeDeslikePost> getQtdLike(int postId) throws SQLException {
+        PreparedStatement preparedStatement;
+        Connection connection = ConnectionFactory.getConnection();
+        ResultSet resultSet = null;
+        ArrayList<LikeDeslikePost> listLike = new ArrayList<>();
+        int like = 0;
+        int deslike = 0;
+
+        String SQLQuery = "SELECT * FROM TB_CONTAGEM_LIKE WHERE ID_POSTAGEM = ? ";
+
+        preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
+        preparedStatement.setInt(1, postId);
+        resultSet = preparedStatement.executeQuery();
+
+        while (resultSet.next()) {
+            listLike.add(
+                    new LikeDeslikePost(
+                            resultSet.getInt("ID_USUARIO"),
+                            resultSet.getInt("LIKE_DESLIKE")
+                    )
+            );
+        }
+
+
+        return listLike;
     }
 }
 
