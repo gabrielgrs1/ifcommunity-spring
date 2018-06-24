@@ -56,6 +56,23 @@ public class ChartDAO {
             }
         }
 
+        SQLQuery = "SELECT * FROM TB_CONTAGEM_LIKE " +
+                " INNER JOIN TB_POSTAGEM TP on TB_CONTAGEM_LIKE.ID_POSTAGEM = TP.ID" +
+                " INNER JOIN TB_COMENTARIO_POSTAGEM TC on TP.ID = TC.ID_POSTAGEM"
+                + " WHERE TP.ID_USUARIO = ? ";
+
+        preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
+        preparedStatement.setInt(1, userId);
+        resultSet = preparedStatement.executeQuery();
+
+        while (resultSet.next()) {
+            if (resultSet.getInt("LIKE_DESLIKE") == 0) {
+                like++;
+            } else {
+                deslike++;
+            }
+        }
+
         chart = new Chart(like, deslike);
         chartList.add(chart);
 
