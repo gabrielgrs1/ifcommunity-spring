@@ -48,6 +48,11 @@ public class UserController {
         try {
             user = UserDAO.login(requestBody);
             System.out.println("User response body " + user);
+
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(user);
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -61,6 +66,10 @@ public class UserController {
 
         try {
             user = UserDAO.updateStudent(requestBody); // Case update Student
+
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(user);
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
