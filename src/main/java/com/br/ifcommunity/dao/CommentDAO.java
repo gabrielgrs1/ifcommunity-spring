@@ -46,6 +46,7 @@ public class CommentDAO {
             commentArrayList.add(
                     new Comment(
                             resultSet.getInt("ID_POSTAGEM"),
+                            resultSet.getInt("ID"),
                             resultSet.getString("NOME"),
                             resultSet.getString("COMENTARIO"),
                             resultSet.getString("TB_COMENTARIO_POSTAGEM.DT_REGISTRO")

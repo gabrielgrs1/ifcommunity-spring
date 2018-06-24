@@ -7,6 +7,7 @@ public class Comment implements Serializable {
 
     private int postId;
     private int authorId;
+    private int commentId;
     private String authorName;
     private String commentText;
     private String registerDate;
@@ -18,8 +19,9 @@ public class Comment implements Serializable {
         this.commentText = commentText;
     }
 
-    public Comment(int postId, String authorName, String commentText, String registerDate) {
+    public Comment(int postId, int commentId, String authorName, String commentText, String registerDate) {
         this.postId = postId;
+        this.commentId = commentId;
         this.authorName = authorName;
         this.commentText = commentText;
         this.registerDate = registerDate;
@@ -50,6 +52,10 @@ public class Comment implements Serializable {
 
     public String getRegisterDate() {
         return registerDate;
+    }
+
+    public int getCommentId() {
+        return commentId;
     }
 
     @Override
