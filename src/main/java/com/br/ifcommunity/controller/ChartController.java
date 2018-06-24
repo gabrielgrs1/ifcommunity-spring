@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 @Controller
 @CrossOrigin(origins = "*")
@@ -18,14 +19,15 @@ import java.sql.SQLException;
 public class ChartController {
 
     @RequestMapping(value = "/charts", method = RequestMethod.GET)
-    public ResponseEntity<Chart> getChartsInfo(@RequestParam int userId) {
-        Chart chartsInfo = null;
+    public ResponseEntity<ArrayList<Chart>> getChartsInfo(@RequestParam int userId) {
+        ArrayList<Chart> chartsInfoList = null;
 
         try {
-            chartsInfo = ChartDAO.getChartsInfo(userId);
+            chartsInfoList = ChartDAO.getChartsInfo(userId);
 
-            if (chartsInfo == null) {
-                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new Chart("Falha ao buscar informações do gráfico!"));
+            if (chartsInfoList == null) {
+                chartsInfoList.add(new Chart("Falha ao buscar informações do gráfico!"));
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(chartsInfoList);
             }
 
 
@@ -33,6 +35,6 @@ public class ChartController {
             e.printStackTrace();
         }
 
-        return ResponseEntity.ok().body(chartsInfo);
+        return ResponseEntity.ok().body(chartsInfoList);
     }
 }

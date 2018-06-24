@@ -7,13 +7,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class ChartDAO {
-    public static Chart getChartsInfo(int userId) throws SQLException {
+    public static ArrayList<Chart> getChartsInfo(int userId) throws SQLException {
         PreparedStatement preparedStatement;
         ResultSet resultSet;
         Connection connection = ConnectionFactory.getConnection();
+        ArrayList<Chart> chartList = new ArrayList<>();
         Chart chart = null;
 
         String SQLQuery = "SELECT TB_POSTAGEM.LINGUAGEM_POSTAGEM, TB_MATERIA.NOME_MATERIA,"
@@ -31,21 +33,23 @@ public class ChartDAO {
                     resultSet.getInt("CONTAGEM_POSTAGEM"),
                     resultSet.getString("NOME_MATERIA")
             );
+
+            chartList.add(chart);
         }
 
 
         connection.close();
 
-        return chart;
+        return chartList;
     }
 }
 
-//class main {
-//    public static void main(String[] args) {
-//        try {
-//            System.out.println(ChartDAO.getChartsInfo(2));
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//}
+class main {
+    public static void main(String[] args) {
+        try {
+            System.out.println(ChartDAO.getChartsInfo(2));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
