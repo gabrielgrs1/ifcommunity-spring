@@ -82,12 +82,12 @@ public class ChartDAO {
     }
 }
 
-class main {
-    public static void main(String[] args) {
-        try {
-            System.out.println(ChartDAO.getChartsInfo(2));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-}
+//class main {
+//    public static void main(String[] args) {
+//        try {
+//            System.out.println(ChartDAO.getChartsInfo(2));
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//}
