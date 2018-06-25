@@ -57,51 +57,52 @@ public class PostDAO {
 
     public static ArrayList<Post> getPost(String matter, String dateLastPost) throws SQLException {
         ArrayList<Post> listPost = new ArrayList<>();
+        ArrayList<LikeDeslikePost> likeDeslikePostArrayList = new ArrayList<>();
         PreparedStatement preparedStatement;
         ResultSet resultSet;
         Connection connection = ConnectionFactory.getConnection();
-        String sql;
+        String SQLQuery;
 
         if (matter.equals("")) {
             if (dateLastPost.equals("")) {
-                sql = "SELECT * FROM TB_POSTAGEM"
+                SQLQuery = "SELECT * FROM TB_POSTAGEM"
                         + " INNER JOIN TB_USUARIO ON TB_POSTAGEM.ID_USUARIO = TB_USUARIO.ID"
                         + " INNER JOIN TB_ALUNO ON (TB_ALUNO.ID_USUARIO = TB_USUARIO.ID)"
                         + " INNER JOIN TB_MATERIA ON (TB_POSTAGEM.ID_MATERIA = TB_MATERIA.ID)"
                         + " ORDER BY TB_POSTAGEM.DT_REGISTRO DESC";
 
-                preparedStatement = Objects.requireNonNull(connection).prepareStatement(sql);
+                preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
             } else {
-                sql = "SELECT * FROM TB_POSTAGEM"
+                SQLQuery = "SELECT * FROM TB_POSTAGEM"
                         + " INNER JOIN TB_USUARIO ON TB_POSTAGEM.ID_USUARIO = TB_USUARIO.ID"
                         + " INNER JOIN TB_ALUNO ON (TB_ALUNO.ID_USUARIO = TB_USUARIO.ID)"
                         + " INNER JOIN TB_MATERIA ON (TB_POSTAGEM.ID_MATERIA = TB_MATERIA.ID)"
                         + " WHERE TB_POSTAGEM.DT_REGISTRO > ?"
                         + " ORDER BY TB_POSTAGEM.DT_REGISTRO DESC";
 
-                preparedStatement = Objects.requireNonNull(connection).prepareStatement(sql);
+                preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
                 preparedStatement.setString(1, dateLastPost);
             }
         } else {
             if (dateLastPost.equals("")) {
-                sql = "SELECT * FROM TB_POSTAGEM"
+                SQLQuery = "SELECT * FROM TB_POSTAGEM"
                         + " INNER JOIN TB_USUARIO ON TB_POSTAGEM.ID_USUARIO = TB_USUARIO.ID"
                         + " INNER JOIN TB_ALUNO ON (TB_ALUNO.ID_USUARIO = TB_USUARIO.ID)"
                         + " INNER JOIN TB_MATERIA ON (TB_POSTAGEM.ID_MATERIA = TB_MATERIA.ID)"
                         + " WHERE NOME_MATERIA = ?"
                         + " ORDER BY TB_POSTAGEM.DT_REGISTRO DESC";
 
-                preparedStatement = Objects.requireNonNull(connection).prepareStatement(sql);
+                preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
                 preparedStatement.setString(1, matter);
             } else {
-                sql = "SELECT * FROM TB_POSTAGEM"
+                SQLQuery = "SELECT * FROM TB_POSTAGEM"
                         + " INNER JOIN TB_USUARIO ON TB_POSTAGEM.ID_USUARIO = TB_USUARIO.ID"
                         + " INNER JOIN TB_ALUNO ON (TB_ALUNO.ID_USUARIO = TB_USUARIO.ID)"
                         + " INNER JOIN TB_MATERIA ON (TB_POSTAGEM.ID_MATERIA = TB_MATERIA.ID)"
                         + " WHERE NOME_MATERIA = ? AND TB_POSTAGEM.DT_REGISTRO > ?"
                         + " ORDER BY TB_POSTAGEM.DT_REGISTRO DESC";
 
-                preparedStatement = Objects.requireNonNull(connection).prepareStatement(sql);
+                preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
                 preparedStatement.setString(1, matter);
                 preparedStatement.setString(2, dateLastPost);
             }
@@ -109,17 +110,26 @@ public class PostDAO {
 
         resultSet = preparedStatement.executeQuery();
 
-        while (resultSet.next()) {
+        likeDeslikePostArrayList = getQtdLike();
 
+        while (resultSet.next()) {
             Post post = new Post(resultSet.getInt("TB_POSTAGEM.ID"),
-                    resultSet.getString("NOME_MATERIA"),
                     resultSet.getString("NOME"),
+                    resultSet.getString("NOME_MATERIA"),
                     resultSet.getString("TITULO"),
                     resultSet.getString("POSTAGEM"),
                     resultSet.getString("LINGUAGEM_POSTAGEM"),
                     resultSet.getString("TB_POSTAGEM.DT_REGISTRO"));
 
-            post.setLikeDeslikePosts(getQtdLike(resultSet.getInt("TB_POSTAGEM.ID")));
+            ArrayList<LikeDeslikePost> likeDeslikePostArrayListPerPost = new ArrayList<>();
+
+            for (int i = 0; i < likeDeslikePostArrayList.size(); i++) {
+                if (likeDeslikePostArrayList.get(i).getIdPost() == resultSet.getInt("TB_POSTAGEM.ID")) {
+                    likeDeslikePostArrayListPerPost.add(likeDeslikePostArrayList.get(i));
+                }
+            }
+
+            post.setLikeDeslikePosts(likeDeslikePostArrayListPerPost);
 
             listPost.add(post);
         }
@@ -192,7 +202,7 @@ public class PostDAO {
         return "Erro desconhecido!";
     }
 
-    private static ArrayList<LikeDeslikePost> getQtdLike(int postId) throws SQLException {
+    private static ArrayList<LikeDeslikePost> getQtdLike() throws SQLException {
         PreparedStatement preparedStatement;
         Connection connection = ConnectionFactory.getConnection();
         ResultSet resultSet = null;
@@ -200,15 +210,15 @@ public class PostDAO {
         int like = 0;
         int deslike = 0;
 
-        String SQLQuery = "SELECT * FROM TB_CONTAGEM_LIKE WHERE ID_POSTAGEM = ? ";
+        String SQLQuery = "SELECT * FROM TB_CONTAGEM_LIKE";
 
         preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
-        preparedStatement.setInt(1, postId);
         resultSet = preparedStatement.executeQuery();
 
         while (resultSet.next()) {
             listLike.add(
                     new LikeDeslikePost(
+                            resultSet.getInt("ID_POSTAGEM"),
                             resultSet.getInt("ID_USUARIO"),
                             resultSet.getInt("LIKE_DESLIKE")
                     )

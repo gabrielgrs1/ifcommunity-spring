@@ -12,7 +12,8 @@ public class LikeDeslikePost implements Serializable {
     public LikeDeslikePost() {
     }
 
-    public LikeDeslikePost(int idAuthor, int isLike) {
+    public LikeDeslikePost(int idPost, int idAuthor, int isLike) {
+        this.idPost = idPost;
         this.idAuthor = idAuthor;
         this.isLike = isLike;
     }
