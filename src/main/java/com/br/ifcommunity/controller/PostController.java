@@ -65,11 +65,27 @@ public class PostController {
     public ResponseEntity<ArrayList<String>> editPost(@RequestBody PostEdited postRequestBody) {
         ArrayList<String> returnMessage = new ArrayList<>();
 
-
         try {
             returnMessage.add(PostDAO.editPost(postRequestBody));
 
             if (returnMessage.get(0).equals("Usuário não tem permissão para editar essa postagem!")) {
+                ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(returnMessage);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.ok().body(returnMessage);
+    }
+
+    @RequestMapping(value = "/remove", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<ArrayList<String>> removePost(@RequestBody PostEdited postRequestBody) {
+        ArrayList<String> returnMessage = new ArrayList<>();
+
+        try {
+            returnMessage.add(PostDAO.removePost(postRequestBody));
+
+            if (returnMessage.get(0).equals("Usuário não tem permissão para remover essa postagem!")) {
                 ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(returnMessage);
             }
         } catch (SQLException e) {

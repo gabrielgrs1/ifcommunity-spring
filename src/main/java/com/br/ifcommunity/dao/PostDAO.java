@@ -227,5 +227,33 @@ public class PostDAO {
         connection.close();
         return "Erro deseconhecido!";
     }
+
+    public static String removePost(PostEdited postRequestBody) throws SQLException {
+        PreparedStatement preparedStatement;
+        Connection connection = ConnectionFactory.getConnection();
+        ResultSet resultSet = null;
+
+        String SQLQuery = "SELECT * FROM TB_POSTAGEM WHERE ID = ?";
+        preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
+        preparedStatement.setInt(1, postRequestBody.getPostId());
+        resultSet = preparedStatement.executeQuery();
+
+
+        while (resultSet.next()) {
+            if (postRequestBody.getUserId() == resultSet.getInt("ID_USUARIO")) {
+                SQLQuery = "DELETE FROM TB_POSTAGEM WHERE ID = ?";
+                preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
+                preparedStatement.setInt(1, postRequestBody.getPostId());
+                preparedStatement.executeUpdate();
+
+                return "Postagem removida com sucesso!";
+            } else {
+                return "Usuário não tem permissão para remover essa postagem!";
+            }
+        }
+
+        connection.close();
+        return "Erro deseconhecido!";
+    }
 }
 
