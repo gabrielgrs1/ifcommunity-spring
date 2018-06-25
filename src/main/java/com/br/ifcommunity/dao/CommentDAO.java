@@ -54,7 +54,7 @@ public class CommentDAO {
             );
         }
 
-
+        connection.close();
         return commentArrayList;
     }
 }

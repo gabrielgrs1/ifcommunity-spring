@@ -2,6 +2,7 @@ package com.br.ifcommunity.dao;
 
 import com.br.ifcommunity.model.LikeDeslikePost;
 import com.br.ifcommunity.model.Post;
+import com.br.ifcommunity.model.PostEdited;
 import com.br.ifcommunity.util.ConnectionFactory;
 
 import java.sql.Connection;
@@ -52,6 +53,8 @@ public class PostDAO {
         preparedStatement.setString(5, post.getPostText());
 
         preparedStatement.executeUpdate();
+
+        connection.close();
     }
 
     public static ArrayList<Post> getPost(String matter, String dateLastPost) throws SQLException {
@@ -159,6 +162,7 @@ public class PostDAO {
             }
         }
 
+        connection.close();
 
         return resultSetInt;
     }
@@ -186,8 +190,42 @@ public class PostDAO {
             );
         }
 
-
+        connection.close();
         return listLike;
+    }
+
+    public static String editPost(PostEdited postRequestBody) throws SQLException {
+        PreparedStatement preparedStatement;
+        Connection connection = ConnectionFactory.getConnection();
+        ResultSet resultSet = null;
+
+        String SQLQuery = "SELECT * FROM TB_POSTAGEM WHERE ID = ?";
+        preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
+        preparedStatement.setInt(1, postRequestBody.getPostId());
+        resultSet = preparedStatement.executeQuery();
+
+
+        while (resultSet.next()) {
+
+            if (postRequestBody.getUserId() == resultSet.getInt("ID_USUARIO")) {
+                SQLQuery = "UPDATE TB_POSTAGEM " +
+                        "SET TITULO = ?, POSTAGEM = ?, LINGUAGEM_POSTAGEM = ? " +
+                        "WHERE ID = ?";
+                preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
+                preparedStatement.setString(1, postRequestBody.getTitle());
+                preparedStatement.setString(2, postRequestBody.getPostText());
+                preparedStatement.setString(3, postRequestBody.getProgrammingLanguage());
+                preparedStatement.setInt(4, postRequestBody.getPostId());
+                preparedStatement.executeUpdate();
+
+                return "Postagem editada com sucesso!";
+            } else {
+                return "Usuário não tem permissão para editar essa postagem!";
+            }
+        }
+
+        connection.close();
+        return "Erro deseconhecido!";
     }
 }
 

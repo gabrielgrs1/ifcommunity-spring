@@ -3,6 +3,7 @@ package com.br.ifcommunity.controller;
 import com.br.ifcommunity.dao.PostDAO;
 import com.br.ifcommunity.model.LikeDeslikePost;
 import com.br.ifcommunity.model.Post;
+import com.br.ifcommunity.model.PostEdited;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -49,7 +50,6 @@ public class PostController {
     }
 
 
-
     @RequestMapping(value = "/make", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Boolean> doPost(@RequestBody Post postRequestBody) {
         try {
@@ -59,6 +59,24 @@ public class PostController {
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(true);
+    }
+
+    @RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<ArrayList<String>> editPost(@RequestBody PostEdited postRequestBody) {
+        ArrayList<String> returnMessage = new ArrayList<>();
+
+
+        try {
+            returnMessage.add(PostDAO.editPost(postRequestBody));
+
+            if (returnMessage.get(0).equals("Usuário não tem permissão para editar essa postagem!")) {
+                ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(returnMessage);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.ok().body(returnMessage);
     }
 
 
