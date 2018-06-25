@@ -56,7 +56,7 @@ public class MatterController {
     }
 
 
-    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity.BodyBuilder updateMattersUser(@RequestBody MatterUser responseBody) {
 
         try {
