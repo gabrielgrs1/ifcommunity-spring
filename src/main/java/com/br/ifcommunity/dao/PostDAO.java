@@ -131,11 +131,11 @@ public class PostDAO {
         return listPost;
     }
 
-    public static int likeDeslike(LikeDeslikePost likeStructure) throws SQLException {
+    public static String likeDeslike(LikeDeslikePost likeStructure) throws SQLException {
         PreparedStatement preparedStatement;
         Connection connection = ConnectionFactory.getConnection();
         ResultSet resultSet = null;
-        int resultSetInt = 0;
+        int idUsuarioPostagem = 0;
 
         String SQLQuery = "SELECT * FROM TB_CONTAGEM_LIKE" +
                 " INNER JOIN TB_POSTAGEM TP on TB_CONTAGEM_LIKE.ID_POSTAGEM = TP.ID " +
@@ -146,25 +146,52 @@ public class PostDAO {
         resultSet = preparedStatement.executeQuery();
 
         while (resultSet.next()) {
-            if (likeStructure.isExclude() != 1 && resultSet.getInt("TB_POSTAGEM.ID_USUARIO") != likeStructure.getIdAuthor()) {
-                SQLQuery = "DELETE FROM TB_CONTAGEM_LIKE WHERE ID = ?";
+            idUsuarioPostagem = resultSet.getInt("TP.ID_USUARIO");
+            if (idUsuarioPostagem != likeStructure.getIdAuthor()) {
+                if (likeStructure.getIsLike() != resultSet.getInt("LIKE_DESLIKE")) {
+                    SQLQuery = "UPDATE TB_CONTAGEM_LIKE SET LIKE_DESLIKE = ? WHERE ID = ?";
+                    preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
+                    preparedStatement.setInt(1, likeStructure.getIsLike());
+                    preparedStatement.setInt(2, resultSet.getInt("ID"));
+                    preparedStatement.executeUpdate();
+
+                    connection.close();
+                    return "Atualização do Like/Deslike realizado com sucesso!";
+                }
+
+                SQLQuery = "DELETE FROM TB_CONTAGEM_LIKE WHERE ID = ? AND LIKE_DESLIKE = ?";
                 preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
                 preparedStatement.setInt(1, resultSet.getInt("ID"));
-                resultSetInt = preparedStatement.executeUpdate();
+                preparedStatement.setInt(2, likeStructure.getIsLike());
+                preparedStatement.executeUpdate();
 
 
-                SQLQuery = "INSERT INTO TB_CONTAGEM_LIKE (ID_POSTAGEM, ID_USUARIO, LIKE_DESLIKE) VALUES (?, ?, ?)";
-                preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
-                preparedStatement.setInt(1, likeStructure.getIdPost());
-                preparedStatement.setInt(2, likeStructure.getIdAuthor());
-                preparedStatement.setInt(3, likeStructure.getIsLike());
-                resultSetInt = preparedStatement.executeUpdate();
+                connection.close();
+                return "Remoção do Like/Deslike realizado com sucesso!";
             }
         }
 
-        connection.close();
+        if (likeStructure.isExclude() == 0) {
+            if (idUsuarioPostagem == likeStructure.getIdAuthor()) {
+                connection.close();
+                return "Usuário não pode dar like na própria postagem!";
+            }
 
-        return resultSetInt;
+            SQLQuery = "INSERT INTO TB_CONTAGEM_LIKE (ID_POSTAGEM, ID_USUARIO, LIKE_DESLIKE) VALUES (?, ?, ?)";
+            preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
+            preparedStatement.setInt(1, likeStructure.getIdPost());
+            preparedStatement.setInt(2, likeStructure.getIdAuthor());
+            preparedStatement.setInt(3, likeStructure.getIsLike());
+            preparedStatement.executeUpdate();
+
+
+            connection.close();
+            return "Like/Deslike realizado com sucesso!";
+
+        }
+
+        connection.close();
+        return "Erro desconhecido!";
     }
 
     private static ArrayList<LikeDeslikePost> getQtdLike(int postId) throws SQLException {
@@ -217,9 +244,12 @@ public class PostDAO {
                 preparedStatement.setString(3, postRequestBody.getProgrammingLanguage());
                 preparedStatement.setInt(4, postRequestBody.getPostId());
                 preparedStatement.executeUpdate();
+                connection.close();
 
                 return "Postagem editada com sucesso!";
             } else {
+
+                connection.close();
                 return "Usuário não tem permissão para editar essa postagem!";
             }
         }

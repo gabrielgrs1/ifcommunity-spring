@@ -33,20 +33,21 @@ public class PostController {
     }
 
     @RequestMapping(value = "/like", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Boolean> likeDeslike(@RequestBody LikeDeslikePost likeStructure) {
-        int isSucsess = 0;
+    public ResponseEntity<ArrayList<String>> likeDeslike(@RequestBody LikeDeslikePost likeStructure) {
+        ArrayList<String> returnMessage = new ArrayList<>();
+
 
         try {
-            isSucsess = PostDAO.likeDeslike(likeStructure);
+            returnMessage.add(PostDAO.likeDeslike(likeStructure));
 
-            if (isSucsess == 0) {
-                ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(false);
+            if (returnMessage.get(0).equals("Erro desconhecido!")) {
+                ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(returnMessage);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return ResponseEntity.ok().body(true);
+        return ResponseEntity.ok().body(returnMessage);
     }
 
 
