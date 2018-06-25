@@ -29,6 +29,7 @@ public class Post implements Serializable {
         this.postText = postText;
         this.programmingLanguage = programmingLanguage;
         this.registerDate = registerDate;
+        likeDeslikePosts = new ArrayList<>();
     }
 
     public int getPostId() {

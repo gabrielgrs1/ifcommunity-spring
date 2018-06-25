@@ -27,8 +27,6 @@ public class PostDAO {
 
         while (resultSet.next()) {
             userId = resultSet.getInt("ID_USUARIO");
-            System.out.println("ID USUARIO = " + userId);
-            System.out.println("ID ALUNO = " + resultSet.getInt("ID"));
         }
 
         SQLQuery = "SELECT * FROM TB_MATERIA WHERE NOME_MATERIA = ?";
@@ -57,7 +55,7 @@ public class PostDAO {
 
     public static ArrayList<Post> getPost(String matter, String dateLastPost) throws SQLException {
         ArrayList<Post> listPost = new ArrayList<>();
-        ArrayList<LikeDeslikePost> likeDeslikePostArrayList = new ArrayList<>();
+        ArrayList<LikeDeslikePost> likeDeslikePostArrayList = null;
         PreparedStatement preparedStatement;
         ResultSet resultSet;
         Connection connection = ConnectionFactory.getConnection();
@@ -109,7 +107,6 @@ public class PostDAO {
         }
 
         resultSet = preparedStatement.executeQuery();
-
         likeDeslikePostArrayList = getQtdLike();
 
         while (resultSet.next()) {
@@ -121,21 +118,16 @@ public class PostDAO {
                     resultSet.getString("LINGUAGEM_POSTAGEM"),
                     resultSet.getString("TB_POSTAGEM.DT_REGISTRO"));
 
-            ArrayList<LikeDeslikePost> likeDeslikePostArrayListPerPost = new ArrayList<>();
-
             for (int i = 0; i < likeDeslikePostArrayList.size(); i++) {
                 if (likeDeslikePostArrayList.get(i).getIdPost() == resultSet.getInt("TB_POSTAGEM.ID")) {
-                    likeDeslikePostArrayListPerPost.add(likeDeslikePostArrayList.get(i));
+                    post.getLikeDeslikePosts().add(likeDeslikePostArrayList.get(i));
                 }
             }
-
-            post.setLikeDeslikePosts(likeDeslikePostArrayListPerPost);
 
             listPost.add(post);
         }
 
         connection.close();
-
         return listPost;
     }
 
@@ -244,7 +236,7 @@ public class PostDAO {
 
             if (postRequestBody.getUserId() == resultSet.getInt("ID_USUARIO")) {
                 SQLQuery = "UPDATE TB_POSTAGEM " +
-                        "SET TITULO = ?, POSTAGEM = ?, LINGUAGEM_POSTAGEM = ? " +
+                        "SET TITULO = ?, POSTAGEM = ?, LINGUAGEM_POSTAGEM = ?, DT_ATUALIZACAO = CURRENT_TIMESTAMP " +
                         "WHERE ID = ?";
                 preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
                 preparedStatement.setString(1, postRequestBody.getTitle());
