@@ -16,19 +16,20 @@ import java.util.ArrayList;
 @RequestMapping(value = "/post")
 public class CommentController {
     @RequestMapping(value = "/comment", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Boolean> comment(@RequestBody Comment comment) {
-        int isSucess = 0;
-        try {
-            isSucess = CommentDAO.comment(comment);
+    public ResponseEntity<ArrayList<String>> comment(@RequestBody Comment comment) {
+        ArrayList<String> returnMessage = new ArrayList<>();
 
-            if (isSucess == 0) {
-                return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(false);
+        try {
+            returnMessage.add(CommentDAO.comment(comment));
+
+            if (returnMessage.get(0).equals("Erro desconhecido!")) {
+                return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(returnMessage);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return ResponseEntity.ok().body(true);
+        return ResponseEntity.ok().body(returnMessage);
     }
 
     @RequestMapping(value = "/comment", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

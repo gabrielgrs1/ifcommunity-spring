@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class CommentDAO {
-    public static int comment(Comment comment) throws SQLException {
+    public static String comment(Comment comment) throws SQLException {
         PreparedStatement preparedStatement = null;
         int resultSet = 0;
         Connection connection = ConnectionFactory.getConnection();
@@ -25,8 +25,13 @@ public class CommentDAO {
         preparedStatement.setString(3, comment.getCommentText());
         resultSet = preparedStatement.executeUpdate();
 
+        if (resultSet != 0) {
+            connection.close();
+            return "Comentário inserido com sucesso!";
+        }
+
         connection.close();
-        return resultSet;
+        return "Erro desconhecido!";
     }
 
     public static ArrayList<Comment> getComments(int postId) throws SQLException {

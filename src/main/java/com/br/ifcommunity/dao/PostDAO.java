@@ -31,7 +31,6 @@ public class PostDAO {
             System.out.println("ID ALUNO = " + resultSet.getInt("ID"));
         }
 
-
         SQLQuery = "SELECT * FROM TB_MATERIA WHERE NOME_MATERIA = ?";
         preparedStatement = connection.prepareStatement(SQLQuery);
         preparedStatement.setString(1, post.getMatterName());
@@ -40,7 +39,6 @@ public class PostDAO {
         while (resultSet.next()) {
             matterId = resultSet.getInt("ID");
         }
-
 
         SQLQuery = "CALL SP_INSERE_POSTAGEM (?, ?, ?, ?, ?)";
 
