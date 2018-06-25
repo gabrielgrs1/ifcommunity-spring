@@ -57,7 +57,7 @@ public class MatterController {
 
 
     @RequestMapping(value = "/user", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity.BodyBuilder updateMattersUser(@RequestBody MatterUser responseBody) {
+    public ResponseEntity<Boolean> updateMattersUser(@RequestBody MatterUser responseBody) {
 
         try {
             MatterDAO.updateMattersUser(responseBody);
@@ -65,7 +65,7 @@ public class MatterController {
             e.printStackTrace();
         }
 
-        return ResponseEntity.status(HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).body(true);
     }
 
 
