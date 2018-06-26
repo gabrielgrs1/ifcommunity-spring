@@ -127,9 +127,6 @@ public class UserDAO {
         SQLQuery = "SELECT * FROM VW_RECUPERA_ALUNO WHERE MATRICULA = ? OR EMAIL = ? OR USUARIO = ?";
         preparedStatement = connection.prepareStatement(SQLQuery);
 
-
-        System.out.println("User request body: " + userRequestBody);
-
         preparedStatement.setString(1, userRequestBody.getUser());
         preparedStatement.setString(2, userRequestBody.getUser());
         preparedStatement.setString(3, userRequestBody.getUser());
