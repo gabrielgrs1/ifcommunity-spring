@@ -19,6 +19,8 @@ public class User implements Serializable {
     private int permission;
     private String website;
     private String photoHash;
+    private String registerDate;
+    private String updateDate;
 
 
     public User() {
@@ -81,9 +83,7 @@ public class User implements Serializable {
     }
 
     // Dashboard constructor
-
-
-    public User(int userId, int studentId, String user, String name, String phone, String mail, int typeUser, int period, String enrolledNumber, String photoHash) {
+    public User(int userId, int studentId, String user, String name, String phone, String mail, int typeUser, int period, String enrolledNumber, String photoHash, String registerDate, String updateDate) {
         this.userId = userId;
         this.studentId = studentId;
         this.user = user;
@@ -94,6 +94,8 @@ public class User implements Serializable {
         this.period = period;
         this.enrolledNumber = enrolledNumber;
         this.photoHash = photoHash;
+        this.registerDate = registerDate;
+        this.updateDate = updateDate;
     }
 
     // ADMIN constructor
@@ -121,72 +123,136 @@ public class User implements Serializable {
         this.website = website;
     }
 
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
     public int getStudentId() {
         return studentId;
+    }
+
+    public void setStudentId(int studentId) {
+        this.studentId = studentId;
     }
 
     public int getTeacherId() {
         return teacherId;
     }
 
+    public void setTeacherId(int teacherId) {
+        this.teacherId = teacherId;
+    }
+
     public int getAdministratorId() {
         return administratorId;
+    }
+
+    public void setAdministratorId(int administratorId) {
+        this.administratorId = administratorId;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getMail() {
+        return mail;
+    }
+
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+
+    public int getTypeUser() {
+        return typeUser;
+    }
+
+    public void setTypeUser(int typeUser) {
+        this.typeUser = typeUser;
+    }
+
+    public int getPeriod() {
+        return period;
+    }
+
+    public void setPeriod(int period) {
+        this.period = period;
+    }
+
+    public String getEnrolledNumber() {
+        return enrolledNumber;
+    }
+
+    public void setEnrolledNumber(String enrolledNumber) {
+        this.enrolledNumber = enrolledNumber;
     }
 
     public int getPermission() {
         return permission;
     }
 
+    public void setPermission(int permission) {
+        this.permission = permission;
+    }
+
     public String getWebsite() {
         return website;
     }
 
-    public int getUserId() {
-        return userId;
-    }
-
-
-    public String getUser() {
-        return user;
-    }
-
-
-    public String getPassword() {
-        return password;
-    }
-
-
-    public String getName() {
-        return name;
-    }
-
-
-    public String getPhone() {
-        return phone;
-    }
-
-
-    public String getMail() {
-        return mail;
-    }
-
-
-    public int getTypeUser() {
-        return typeUser;
-    }
-
-
-    public int getPeriod() {
-        return period;
-    }
-
-
-    public String getEnrolledNumber() {
-        return enrolledNumber;
+    public void setWebsite(String website) {
+        this.website = website;
     }
 
     public String getPhotoHash() {
         return photoHash;
+    }
+
+    public void setPhotoHash(String photoHash) {
+        this.photoHash = photoHash;
+    }
+
+    public String getRegisterDate() {
+        return registerDate;
+    }
+
+    public void setRegisterDate(String registerDate) {
+        this.registerDate = registerDate;
+    }
+
+    public String getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(String updateDate) {
+        this.updateDate = updateDate;
     }
 
     @Override

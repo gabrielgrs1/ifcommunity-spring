@@ -101,7 +101,9 @@ public class UserDAO {
                     resultSet.getInt("TIPO_DE_REGISTRO"),
                     resultSet.getInt("PERIODO"),
                     resultSet.getString("MATRICULA"),
-                    null
+                    null,
+                    resultSet.getString("DATA_REGISTRO"),
+                    resultSet.getString("DATA_ATUALIZACAO")
             );
         }
         connection.close();
@@ -141,7 +143,9 @@ public class UserDAO {
                             resultSet.getInt("TIPO_DE_REGISTRO"),
                             resultSet.getInt("PERIODO"),
                             resultSet.getString("MATRICULA"),
-                            resultSet.getString("HASH_FOTO")
+                            resultSet.getString("HASH_FOTO"),
+                            resultSet.getString("DATA_REGISTRO"),
+                            resultSet.getString("DATA_ATUALIZACAO")
                     );
                 }
 //                else if (resultSet.getInt("TIPO_DE_REGISTRO") == 2) { // Case the user is Teacher
@@ -203,7 +207,9 @@ public class UserDAO {
                     resultSet.getInt("TIPO_DE_REGISTRO"),
                     resultSet.getInt("PERIODO"),
                     resultSet.getString("MATRICULA"),
-                    resultSet.getString("HASH_FOTO")
+                    resultSet.getString("HASH_FOTO"),
+                    resultSet.getString("DATA_REGISTRO"),
+                    resultSet.getString("DATA_ATUALIZACAO")
             );
             System.out.println("User dentro do recupera aluno passando novo email: " + student);
         }
