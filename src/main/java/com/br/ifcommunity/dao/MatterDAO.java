@@ -75,6 +75,9 @@ public class MatterDAO {
                 responseBody.getMatter6(),
                 responseBody.getMatter7());
 
+        System.out.println("Matérias passadas pelo front: " + matterList);
+
+
         SQLQuery = "DELETE FROM TB_MATERIA_ALUNO WHERE ID_ALUNO = ?";
         preparedStatement = connection.prepareCall(SQLQuery);
         preparedStatement.setInt(1, responseBody.getStudentId());
