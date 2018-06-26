@@ -55,7 +55,7 @@ public class PostDAO {
 
     public static ArrayList<Post> getPost(String matter, String dateLastPost) throws SQLException {
         ArrayList<Post> listPost = new ArrayList<>();
-        ArrayList<LikeDeslikePost> likeDeslikePostArrayList = null;
+        ArrayList<LikeDeslikePost> likeDeslikePostArrayList = getQtdLike();
         PreparedStatement preparedStatement;
         ResultSet resultSet;
         Connection connection = ConnectionFactory.getConnection();
@@ -107,7 +107,6 @@ public class PostDAO {
         }
 
         resultSet = preparedStatement.executeQuery();
-        likeDeslikePostArrayList = getQtdLike();
 
         while (resultSet.next()) {
             Post post = new Post(resultSet.getInt("TB_POSTAGEM.ID"),
@@ -116,7 +115,8 @@ public class PostDAO {
                     resultSet.getString("TITULO"),
                     resultSet.getString("POSTAGEM"),
                     resultSet.getString("LINGUAGEM_POSTAGEM"),
-                    resultSet.getString("TB_POSTAGEM.DT_REGISTRO"));
+                    resultSet.getString("TB_POSTAGEM.DT_REGISTRO"),
+                    resultSet.getString("TB_POSTAGEM.DT_ATUALIZACAO"));
 
             for (int i = 0; i < likeDeslikePostArrayList.size(); i++) {
                 if (likeDeslikePostArrayList.get(i).getIdPost() == resultSet.getInt("TB_POSTAGEM.ID")) {

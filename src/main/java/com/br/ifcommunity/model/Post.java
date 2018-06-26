@@ -32,6 +32,18 @@ public class Post implements Serializable {
         likeDeslikePosts = new ArrayList<>();
     }
 
+    public Post(int postId, String authorName, String matterName, String title, String postText, String programmingLanguage, String registerDate, String updateDate) {
+        this.postId = postId;
+        this.authorName = authorName;
+        this.matterName = matterName;
+        this.title = title;
+        this.postText = postText;
+        this.programmingLanguage = programmingLanguage;
+        this.registerDate = registerDate;
+        this.updateDate = updateDate;
+        likeDeslikePosts = new ArrayList<>();
+    }
+
     public int getPostId() {
         return postId;
     }
