@@ -27,10 +27,10 @@ public class ConnectionFactory {
     }
 
     public static void main(String[]args){
-        if (new ConnectionFactory().getConnection() != null) {
-            System.out.println("Conectado com sucesso!");
-        } else {
-            System.out.println("Erro");
-        }
+//        if (new ConnectionFactory().getConnection() != null) {
+//            System.out.println("Conectado com sucesso!");
+//        } else {
+//            System.out.println("Erro");
+//        }
     }
 }

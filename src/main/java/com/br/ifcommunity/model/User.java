@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class User implements Serializable {
-    private int userId;
+    private String userId;
     private int studentId;
     private int teacherId;
     private int administratorId;
@@ -38,35 +38,11 @@ public class User implements Serializable {
     }
 
     // Update constructor
-    public User(int userId, String name, String phone, String mail) {
+    public User(String userId, String name, String phone, String mail) {
         this.userId = userId;
         this.name = name;
         this.phone = phone;
         this.mail = mail;
-    }
-
-    // TEACHER constructor
-    // Register constructor
-    public User(String user, String password, String name, String phone, String mail, int typeUser, String website) {
-        this.user = user;
-        this.password = password;
-        this.name = name;
-        this.phone = phone;
-        this.mail = mail;
-        this.typeUser = typeUser;
-        this.website = website;
-    }
-
-    // Dashboard constructor
-    public User(int userId, int teacherId, String user, String name, String phone, String mail, int typeUser, String website) {
-        this.userId = userId;
-        this.teacherId = teacherId;
-        this.user = user;
-        this.name = name;
-        this.phone = phone;
-        this.mail = mail;
-        this.typeUser = typeUser;
-        this.website = website;
     }
 
     // STUDENT constructor
@@ -83,7 +59,7 @@ public class User implements Serializable {
     }
 
     // Dashboard constructor
-    public User(int userId, int studentId, String user, String name, String phone, String mail, int typeUser, int period, String enrolledNumber, String photoHash, String registerDate, String updateDate) {
+    public User(String userId, int studentId, String user, String name, String phone, String mail, int typeUser, int period, String enrolledNumber, String photoHash, String registerDate, String updateDate) {
         this.userId = userId;
         this.studentId = studentId;
         this.user = user;
@@ -123,11 +99,11 @@ public class User implements Serializable {
         this.website = website;
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
@@ -281,7 +257,7 @@ public class User implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user1 = (User) o;
-        return userId == user1.userId &&
+        return userId.equals(user1.userId) &&
                 studentId == user1.studentId &&
                 teacherId == user1.teacherId &&
                 administratorId == user1.administratorId &&

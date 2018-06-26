@@ -4,6 +4,7 @@ import com.br.ifcommunity.model.User;
 import com.br.ifcommunity.regex.PasswordValidation;
 import com.br.ifcommunity.regex.VerificationRegister;
 import com.br.ifcommunity.util.ConnectionFactory;
+import com.br.ifcommunity.util.HashGenerator;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -66,7 +67,7 @@ public class UserDAO {
         Connection connection = ConnectionFactory.getConnection();
         User student = null;
 
-        String SQLQuery = "CALL CADASTRO_USUARIO(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String SQLQuery = "CALL CADASTRO_USUARIO(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 
         preparedStatement = connection.prepareCall(SQLQuery);
@@ -80,6 +81,7 @@ public class UserDAO {
         preparedStatement.setString(7, user.getPhone());
         preparedStatement.setInt(8, 1);
         preparedStatement.setString(9, null);
+        preparedStatement.setString(10, HashGenerator.gerenerateHashUser());
 
         resultSet = preparedStatement.executeQuery();
 
@@ -92,7 +94,7 @@ public class UserDAO {
 
         while (resultSet.next()) {
             student = new User(
-                    resultSet.getInt("ID_USUARIO"),
+                    resultSet.getString("TOKEN") + ";" + resultSet.getInt("ID_USUARIO"),
                     resultSet.getInt("ID_ALUNO"),
                     resultSet.getString("USUARIO"),
                     resultSet.getString("NOME"),
@@ -117,9 +119,12 @@ public class UserDAO {
         Connection connection = ConnectionFactory.getConnection();
         User user = null;
 
-        String SQLQuery = "SELECT * FROM VW_RECUPERA_ALUNO WHERE MATRICULA = ? OR EMAIL = ? OR USUARIO = ?";
+        String SQLQuery = "UPDATE TB_USUARIO SET TOKEN = ?";
+        preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
+        preparedStatement.setString(1, HashGenerator.gerenerateHashUser());
+        preparedStatement.executeUpdate();
 
-
+        SQLQuery = "SELECT * FROM VW_RECUPERA_ALUNO WHERE MATRICULA = ? OR EMAIL = ? OR USUARIO = ?";
         preparedStatement = connection.prepareStatement(SQLQuery);
 
 
@@ -134,7 +139,7 @@ public class UserDAO {
             if (resultSet.getString("SENHA").equals(userRequestBody.getPassword())) {
                 if (resultSet.getInt("TIPO_DE_REGISTRO") == 1) {    // Case the user is Student
                     user = new User(
-                            resultSet.getInt("ID_USUARIO"),
+                            resultSet.getString("TOKEN") + ";" +resultSet.getInt("ID_USUARIO"),
                             resultSet.getInt("ID_ALUNO"),
                             resultSet.getString("USUARIO"),
                             resultSet.getString("NOME"),
@@ -148,21 +153,6 @@ public class UserDAO {
                             resultSet.getString("DATA_ATUALIZACAO")
                     );
                 }
-//                else if (resultSet.getInt("TIPO_DE_REGISTRO") == 2) { // Case the user is Teacher
-//                    user = new User(
-//                            resultSet.getInt("ID_USUARIO"),
-//                            resultSet.getInt("ID_PROFESSOR"),
-//                            resultSet.getString("USUARIO"),
-//                            resultSet.getString("NOME"),
-//                            resultSet.getString("TELEFONE"),
-//                            resultSet.getString("EMAIL"),
-//                            resultSet.getInt("TIPO_DE_REGISTRO"),
-//                            resultSet.getInt("PERIODO"),
-//                            resultSet.getString("MATRICULA")
-//                    );
-//                } else { // Case the user is Administrator
-//
-//                }
             }
         }
 
@@ -176,17 +166,19 @@ public class UserDAO {
         ResultSet resultSet = null;
         Connection connection = ConnectionFactory.getConnection();
         User student = null;
+        String token = studentRequestBody.getUserId().split(";")[0];
+        studentRequestBody.setUserId(studentRequestBody.getUserId().split(";")[1]);
 
-        System.out.println("User student request body: " + studentRequestBody);
-
-        String SQLQuery = "CALL SP_ATUALIZA_PERFIL(?, ?, ?, ?)";
+        String SQLQuery = "CALL SP_ATUALIZA_PERFIL(?, ?, ?, ?, ?)";
 
         preparedStatement = connection.prepareCall(SQLQuery);
 
-        preparedStatement.setInt(1, studentRequestBody.getUserId());
+
+        preparedStatement.setInt(1, Integer.parseInt(studentRequestBody.getUserId()));
         preparedStatement.setString(2, studentRequestBody.getMail());
         preparedStatement.setString(3, studentRequestBody.getName());
         preparedStatement.setString(4, studentRequestBody.getPhone());
+        preparedStatement.setString(5, token);
 
         resultSet = preparedStatement.executeQuery();
 
@@ -198,7 +190,7 @@ public class UserDAO {
 
         while (resultSet.next()) {
             student = new User(
-                    resultSet.getInt("ID_USUARIO"),
+                    resultSet.getString("TOKEN") + ";" +resultSet.getInt("ID_USUARIO"),
                     resultSet.getInt("ID_ALUNO"),
                     resultSet.getString("USUARIO"),
                     resultSet.getString("NOME"),
@@ -211,7 +203,6 @@ public class UserDAO {
                     resultSet.getString("DATA_REGISTRO"),
                     resultSet.getString("DATA_ATUALIZACAO")
             );
-            System.out.println("User dentro do recupera aluno passando novo email: " + student);
         }
 
         connection.close();
@@ -263,13 +254,16 @@ public class UserDAO {
         PreparedStatement preparedStatement = null;
         int resultSet = 0;
         Connection connection = ConnectionFactory.getConnection();
+        String token = user.getUserId().split(";")[0];
+        user.setUserId(user.getUserId().split(";")[1]);
 
-        String SQLQuery = "UPDATE TB_USUARIO SET HASH_FOTO = ? WHERE ID = ?";
+        String SQLQuery = "UPDATE TB_USUARIO SET HASH_FOTO = ? WHERE ID = ? AND TOKEN = ? ";
 
         preparedStatement = connection.prepareCall(SQLQuery);
 
         preparedStatement.setString(1, user.getPhotoHash());
-        preparedStatement.setInt(2, user.getUserId());
+        preparedStatement.setInt(2, Integer.parseInt(user.getUserId()));
+        preparedStatement.setString(3, token);
 
         resultSet = preparedStatement.executeUpdate();
 

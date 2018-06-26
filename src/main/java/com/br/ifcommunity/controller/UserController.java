@@ -17,95 +17,89 @@ public class UserController {
 
     @RequestMapping(value = "/register", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> registerUser(@RequestBody User user) {
+        System.out.println("[REGISTRO] User passado pelo front: " + user);
 
-        if (user.getTypeUser() == 1) { // Case the user is Student
-            try {
-                if (UserDAO.verifyRegister(user).equals("")) {
-                    user = UserDAO.register(user);
-                } else {
-                    user = new User("Usuário ou email ou matricula já cadastro(s)!");
+        try {
+            if (UserDAO.verifyRegister(user).equals("")) {
+                user = UserDAO.register(user);
 
-                    return ResponseEntity.status(HttpStatus.CONFLICT).body(user);
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
+                return ResponseEntity.ok().body(user);
+            } else {
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
             }
+        } catch (SQLException e) {
+            System.out.println(e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-//        else if (user.getTypeUser() == 2) { // Case the user is Teacher
-//
-//        } else { // Case the user is Administrator
-//
-//        }
-
-
-        return ResponseEntity.ok().body(user);
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = "application/json")
-    public ResponseEntity<User> login(@RequestBody User requestBody) {
-        User user = null;
+    public ResponseEntity<User> login(@RequestBody User user) {
+        System.out.println("[LOGIN] User passado pelo front: " + user);
 
         try {
-            user = UserDAO.login(requestBody);
-            System.out.println("User response body " + user);
+            user = UserDAO.login(user);
 
             if (user == null) {
-                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(user);
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return ResponseEntity.ok().body(user);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> udpateUser(@RequestBody User requestBody) {
-        User user = null;
+    public ResponseEntity<User> udpateUser(@RequestBody User user) {
+        System.out.println("[ATUALIZA USUARIO] User passado pelo front: " + user);
 
         try {
-            user = UserDAO.updateStudent(requestBody); // Case update Student
+            user = UserDAO.updateStudent(user);
 
             if (user == null) {
-                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(user);
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            } else {
+                return ResponseEntity.ok().body(user);
             }
-
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println(e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return ResponseEntity.ok().body(user);
     }
 
     @RequestMapping(value = "/verify", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> verifyIsNotRegister(@RequestParam String verifyString) {
-        String verifyError = "";
+        String verifyError;
 
         try {
             verifyError = UserDAO.verifyIsNotRegister(verifyString);
+            return ResponseEntity.ok().body(verifyError);
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println(e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return ResponseEntity.ok().body(verifyError);
     }
 
     @RequestMapping(value = "/photo", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Boolean> uploadPhoto(@RequestBody User user) {
-        int isSucess = 0;
+    public ResponseEntity uploadPhoto(@RequestBody User user) {
+        int isSucess;
         try {
             isSucess = UserDAO.uploadPhoto(user);
 
             if (isSucess == 0) {
-                return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(false);
+                return new ResponseEntity(HttpStatus.EXPECTATION_FAILED);
+            } else {
+                return new ResponseEntity(HttpStatus.OK);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println(e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return ResponseEntity.ok().body(true);
     }
 }
 
