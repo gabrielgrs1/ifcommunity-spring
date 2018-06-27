@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class MatterDAO {
 
@@ -46,7 +47,7 @@ public class MatterDAO {
                 " INNER JOIN TB_MATERIA AS TB_M ON (TB_M.ID = TB_MA.ID_MATERIA)" +
                 " WHERE ID_ALUNO = ?";
 
-        preparedStatement = connection.prepareStatement(SQLQuery);
+        preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
         preparedStatement.setInt(1, studentId);
         resultSet = preparedStatement.executeQuery();
 
@@ -66,7 +67,6 @@ public class MatterDAO {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         Connection connection = ConnectionFactory.getConnection();
-        String SQLQuery = "";
         List<String> matterList = Arrays.asList(responseBody.getMatter1(),
                 responseBody.getMatter2(),
                 responseBody.getMatter3(),
@@ -77,31 +77,43 @@ public class MatterDAO {
 
         System.out.println("Matérias passadas pelo front: " + matterList);
 
+        String token = responseBody.getStudentId().split(";")[0];
+        String userId = responseBody.getStudentId().split(";")[1];
 
-        SQLQuery = "DELETE FROM TB_MATERIA_ALUNO WHERE ID_ALUNO = ?";
-        preparedStatement = connection.prepareCall(SQLQuery);
-        preparedStatement.setInt(1, responseBody.getStudentId());
-        preparedStatement.executeUpdate();
+        String SQLQuery = "SELECT * FROM TB_USUARIO WHERE ID = ? AND TOKEN = ?";
+        preparedStatement = connection.prepareStatement(SQLQuery);
+        preparedStatement.setInt(1, Integer.parseInt(userId));
+        preparedStatement.setString(2, token);
+        resultSet = preparedStatement.executeQuery();
 
-        if (matterList.get(0) != null) {
-            for (int i = 0; i < matterList.size(); i++) {
-                if (matterList.get(i) != null) {
-                    SQLQuery = "SELECT ID FROM TB_MATERIA WHERE NOME_MATERIA = ?";
-                    preparedStatement = connection.prepareCall(SQLQuery);
-                    preparedStatement.setString(1, matterList.get(i));
-                    resultSet = preparedStatement.executeQuery();
+        if (resultSet.next()) {
+            SQLQuery = "DELETE FROM TB_MATERIA_ALUNO WHERE ID_ALUNO = " +
+                    "(SELECT ID FROM TB_ALUNO WHERE ID_USUARIO = ?)";
+            preparedStatement = connection.prepareCall(SQLQuery);
+            preparedStatement.setInt(1, Integer.parseInt(userId));
+            preparedStatement.executeUpdate();
 
-                    while (resultSet.next()) {
-                        SQLQuery = "INSERT INTO TB_MATERIA_ALUNO (ID_MATERIA, ID_ALUNO) VALUES (?, ?)";
+            if (matterList.get(0) != null) {
+                for (int i = 0; i < matterList.size(); i++) {
+                    if (matterList.get(i) != null) {
+                        SQLQuery = "SELECT ID FROM TB_MATERIA WHERE NOME_MATERIA = ?";
                         preparedStatement = connection.prepareCall(SQLQuery);
-                        preparedStatement.setInt(1, resultSet.getInt("ID"));
-                        preparedStatement.setInt(2, responseBody.getStudentId());
-                        preparedStatement.execute();
+                        preparedStatement.setString(1, matterList.get(i));
+                        resultSet = preparedStatement.executeQuery();
+
+                        while (resultSet.next()) {
+                            SQLQuery = "INSERT INTO TB_MATERIA_ALUNO (ID_MATERIA, ID_ALUNO) " +
+                                    "VALUES (?, " +
+                                    "(SELECT ID FROM TB_ALUNO WHERE ID_USUARIO = ?))";
+                            preparedStatement = connection.prepareCall(SQLQuery);
+                            preparedStatement.setInt(1, resultSet.getInt("ID"));
+                            preparedStatement.setInt(2, Integer.parseInt(userId));
+                            preparedStatement.execute();
+                        }
                     }
                 }
             }
         }
-
         connection.close();
     }
 }

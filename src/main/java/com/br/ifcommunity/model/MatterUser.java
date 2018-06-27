@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class MatterUser implements Serializable {
 
-    private int studentId;
+    private String studentId;
     private String matter1;
     private String matter2;
     private String matter3;
@@ -17,7 +17,7 @@ public class MatterUser implements Serializable {
     public MatterUser() {
     }
 
-    public MatterUser(int studentId, String matter1, String matter2, String matter3, String matter4, String matter5, String matter6, String matter7) {
+    public MatterUser(String studentId, String matter1, String matter2, String matter3, String matter4, String matter5, String matter6, String matter7) {
         this.studentId = studentId;
         this.matter1 = matter1;
         this.matter2 = matter2;
@@ -28,7 +28,7 @@ public class MatterUser implements Serializable {
         this.matter7 = matter7;
     }
 
-    public int getStudentId() {
+    public String getStudentId() {
         return studentId;
     }
 
@@ -58,6 +58,38 @@ public class MatterUser implements Serializable {
 
     public String getMatter7() {
         return matter7;
+    }
+
+    public void setStudentId(String studentId) {
+        this.studentId = studentId;
+    }
+
+    public void setMatter1(String matter1) {
+        this.matter1 = matter1;
+    }
+
+    public void setMatter2(String matter2) {
+        this.matter2 = matter2;
+    }
+
+    public void setMatter3(String matter3) {
+        this.matter3 = matter3;
+    }
+
+    public void setMatter4(String matter4) {
+        this.matter4 = matter4;
+    }
+
+    public void setMatter5(String matter5) {
+        this.matter5 = matter5;
+    }
+
+    public void setMatter6(String matter6) {
+        this.matter6 = matter6;
+    }
+
+    public void setMatter7(String matter7) {
+        this.matter7 = matter7;
     }
 
     @Override
