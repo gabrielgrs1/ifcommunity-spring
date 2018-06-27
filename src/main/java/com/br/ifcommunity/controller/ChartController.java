@@ -20,7 +20,7 @@ import java.util.Collections;
 public class ChartController {
 
     @RequestMapping(value = "/charts", method = RequestMethod.GET)
-    public ResponseEntity getChartsInfo(@RequestParam int userId) {
+    public ResponseEntity getChartsInfo(@RequestParam String userId) {
         ArrayList<Chart> chartsInfoList = null;
 
         try {
