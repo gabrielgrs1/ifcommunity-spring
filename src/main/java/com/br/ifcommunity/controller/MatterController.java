@@ -45,7 +45,7 @@ public class MatterController {
             matterlist = MatterDAO.getUserMatters(studentId);
 
             if (matterlist.size() == 0) {
-                ResponseEntity.status(HttpStatus.NO_CONTENT).body(matterlist.add(new Matter(0, "Erro ao buscar matérias ou não foi encontrada nenhuma!", 0)));
+                ResponseEntity.status(HttpStatus.CONFLICT).body(matterlist.add(new Matter(0, "Erro ao buscar matérias ou não foi encontrada nenhuma!", 0)));
             }
 
         } catch (SQLException e) {

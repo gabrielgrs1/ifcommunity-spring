@@ -13,44 +13,45 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class PostDAO {
-    public static void addPost(Post post) throws SQLException {
+    public static String addPost(Post post) throws SQLException {
         PreparedStatement preparedStatement;
         Connection connection = ConnectionFactory.getConnection();
         ResultSet resultSet;
-        int matterId = 0;
-        int userId = 0;
+        int resultSetInt;
+        String resultString;
+        String token = post.getAuthorId().split(";")[0];
 
-        String SQLQuery = "SELECT * FROM TB_ALUNO WHERE ID = ?";
-        preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
-        preparedStatement.setInt(1, post.getAuthorId());
+        post.setAuthorId(post.getAuthorId().split(";")[1]);
+
+        String SQLQuery = "SELECT * FROM TB_USUARIO WHERE ID = ? AND TOKEN = ?";
+        preparedStatement = connection.prepareStatement(SQLQuery);
+        preparedStatement.setInt(1, Integer.parseInt(post.getAuthorId()));
+        preparedStatement.setString(2, token);
         resultSet = preparedStatement.executeQuery();
 
-        while (resultSet.next()) {
-            userId = resultSet.getInt("ID_USUARIO");
+        if (resultSet.next()) {
+            SQLQuery = "CALL SP_INSERE_POSTAGEM (?, ?, ?, ?, ?)";
+            preparedStatement = connection.prepareStatement(SQLQuery);
+            preparedStatement.setInt(1, Integer.parseInt(post.getAuthorId()));
+            preparedStatement.setString(2, post.getMatterName());
+            preparedStatement.setString(3, post.getTitle());
+            preparedStatement.setString(4, post.getProgrammingLanguage());
+            preparedStatement.setString(5, post.getPostText());
+
+            resultSetInt = preparedStatement.executeUpdate();
+
+            if (resultSetInt > 0) {
+                resultString = "Postagem inserida com sucesso!";
+            } else {
+                resultString = "Erro ao inserir postagem!";
+            }
+
+        } else {
+            resultString = "Usuário inválido!";
         }
-
-        SQLQuery = "SELECT * FROM TB_MATERIA WHERE NOME_MATERIA = ?";
-        preparedStatement = connection.prepareStatement(SQLQuery);
-        preparedStatement.setString(1, post.getMatterName());
-        resultSet = preparedStatement.executeQuery();
-
-        while (resultSet.next()) {
-            matterId = resultSet.getInt("ID");
-        }
-
-        SQLQuery = "CALL SP_INSERE_POSTAGEM (?, ?, ?, ?, ?)";
-
-        preparedStatement = connection.prepareStatement(SQLQuery);
-
-        preparedStatement.setInt(1, userId);
-        preparedStatement.setInt(2, matterId);
-        preparedStatement.setString(3, post.getTitle());
-        preparedStatement.setString(4, post.getProgrammingLanguage());
-        preparedStatement.setString(5, post.getPostText());
-
-        preparedStatement.executeUpdate();
 
         connection.close();
+        return resultString;
     }
 
     public static ArrayList<Post> getPost(String matter, String dateLastPost) throws SQLException {
@@ -63,42 +64,30 @@ public class PostDAO {
 
         if (matter.equals("")) {
             if (dateLastPost.equals("")) {
-                SQLQuery = "SELECT * FROM TB_POSTAGEM"
-                        + " INNER JOIN TB_USUARIO ON TB_POSTAGEM.ID_USUARIO = TB_USUARIO.ID"
-                        + " INNER JOIN TB_ALUNO ON (TB_ALUNO.ID_USUARIO = TB_USUARIO.ID)"
-                        + " INNER JOIN TB_MATERIA ON (TB_POSTAGEM.ID_MATERIA = TB_MATERIA.ID)"
-                        + " ORDER BY TB_POSTAGEM.DT_REGISTRO DESC";
+                SQLQuery = "SELECT * FROM VW_RECUPERA_POSTAGEM"
+                        + " ORDER BY DATA_REGISTRO DESC";
 
                 preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
             } else {
-                SQLQuery = "SELECT * FROM TB_POSTAGEM"
-                        + " INNER JOIN TB_USUARIO ON TB_POSTAGEM.ID_USUARIO = TB_USUARIO.ID"
-                        + " INNER JOIN TB_ALUNO ON (TB_ALUNO.ID_USUARIO = TB_USUARIO.ID)"
-                        + " INNER JOIN TB_MATERIA ON (TB_POSTAGEM.ID_MATERIA = TB_MATERIA.ID)"
-                        + " WHERE TB_POSTAGEM.DT_REGISTRO > ?"
-                        + " ORDER BY TB_POSTAGEM.DT_REGISTRO DESC";
+                SQLQuery = "SELECT * FROM VW_RECUPERA_POSTAGEM"
+                        + " WHERE DATA_REGISTRO > ?"
+                        + " ORDER BY DATA_REGISTRO DESC";
 
                 preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
                 preparedStatement.setString(1, dateLastPost);
             }
         } else {
             if (dateLastPost.equals("")) {
-                SQLQuery = "SELECT * FROM TB_POSTAGEM"
-                        + " INNER JOIN TB_USUARIO ON TB_POSTAGEM.ID_USUARIO = TB_USUARIO.ID"
-                        + " INNER JOIN TB_ALUNO ON (TB_ALUNO.ID_USUARIO = TB_USUARIO.ID)"
-                        + " INNER JOIN TB_MATERIA ON (TB_POSTAGEM.ID_MATERIA = TB_MATERIA.ID)"
-                        + " WHERE NOME_MATERIA = ?"
-                        + " ORDER BY TB_POSTAGEM.DT_REGISTRO DESC";
+                SQLQuery = "SELECT * FROM VW_RECUPERA_POSTAGEM"
+                        + " WHERE MATERIA = ?"
+                        + " ORDER BY DATA_REGISTRO DESC";
 
                 preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
                 preparedStatement.setString(1, matter);
             } else {
-                SQLQuery = "SELECT * FROM TB_POSTAGEM"
-                        + " INNER JOIN TB_USUARIO ON TB_POSTAGEM.ID_USUARIO = TB_USUARIO.ID"
-                        + " INNER JOIN TB_ALUNO ON (TB_ALUNO.ID_USUARIO = TB_USUARIO.ID)"
-                        + " INNER JOIN TB_MATERIA ON (TB_POSTAGEM.ID_MATERIA = TB_MATERIA.ID)"
-                        + " WHERE NOME_MATERIA = ? AND TB_POSTAGEM.DT_REGISTRO > ?"
-                        + " ORDER BY TB_POSTAGEM.DT_REGISTRO DESC";
+                SQLQuery = "SELECT * FROM VW_RECUPERA_POSTAGEM"
+                        + " WHERE MATERIA = ? AND DATA_REGISTRO > ?"
+                        + " ORDER BY DATA_REGISTRO DESC";
 
                 preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
                 preparedStatement.setString(1, matter);
@@ -109,17 +98,17 @@ public class PostDAO {
         resultSet = preparedStatement.executeQuery();
 
         while (resultSet.next()) {
-            Post post = new Post(resultSet.getInt("TB_POSTAGEM.ID"),
-                    resultSet.getString("NOME"),
-                    resultSet.getString("NOME_MATERIA"),
+            Post post = new Post(resultSet.getInt("ID_POSTAGEM"),
+                    resultSet.getString("AUTOR"),
+                    resultSet.getString("MATERIA"),
                     resultSet.getString("TITULO"),
                     resultSet.getString("POSTAGEM"),
                     resultSet.getString("LINGUAGEM_POSTAGEM"),
-                    resultSet.getString("TB_POSTAGEM.DT_REGISTRO"),
-                    resultSet.getString("TB_POSTAGEM.DT_ATUALIZACAO"));
+                    resultSet.getString("DATA_REGISTRO"),
+                    resultSet.getString("DATA_ATUALIZACAO"));
 
             for (int i = 0; i < likeDeslikePostArrayList.size(); i++) {
-                if (likeDeslikePostArrayList.get(i).getIdPost() == resultSet.getInt("TB_POSTAGEM.ID")) {
+                if (likeDeslikePostArrayList.get(i).getIdPost() == resultSet.getInt("ID_POSTAGEM")) {
                     post.getLikeDeslikePosts().add(likeDeslikePostArrayList.get(i));
                 }
             }
@@ -135,63 +124,77 @@ public class PostDAO {
         PreparedStatement preparedStatement;
         Connection connection = ConnectionFactory.getConnection();
         ResultSet resultSet = null;
-        int idUsuarioPostagem = 0;
+        int idUserPost = 0;
+        String token = likeStructure.getIdAuthor().split(";")[0];
+        likeStructure.setIdAuthor(likeStructure.getIdAuthor().split(";")[1]);
 
-        String SQLQuery = "SELECT * FROM TB_CONTAGEM_LIKE" +
-                " INNER JOIN TB_POSTAGEM TP on TB_CONTAGEM_LIKE.ID_POSTAGEM = TP.ID " +
-                "WHERE ID_POSTAGEM = ? AND TB_CONTAGEM_LIKE.ID_USUARIO = ?";
+        String SQLQuery = "SELECT * FROM TB_USUARIO WHERE ID = ? AND TOKEN = ?";
         preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
-        preparedStatement.setInt(1, likeStructure.getIdPost());
-        preparedStatement.setInt(2, likeStructure.getIdAuthor());
+        preparedStatement.setInt(1, Integer.parseInt(likeStructure.getIdAuthor()));
+        preparedStatement.setString(2, token);
         resultSet = preparedStatement.executeQuery();
 
-        while (resultSet.next()) {
-            idUsuarioPostagem = resultSet.getInt("TP.ID_USUARIO");
-            if (idUsuarioPostagem != likeStructure.getIdAuthor()) {
-                if (likeStructure.getIsLike() != resultSet.getInt("LIKE_DESLIKE")) {
-                    SQLQuery = "UPDATE TB_CONTAGEM_LIKE SET LIKE_DESLIKE = ? WHERE ID = ?";
+
+        if (resultSet.next()) {
+            SQLQuery = "SELECT * FROM TB_CONTAGEM_LIKE" +
+                    " INNER JOIN TB_POSTAGEM TP on TB_CONTAGEM_LIKE.ID_POSTAGEM = TP.ID" +
+                    " WHERE ID_POSTAGEM = ? AND TB_CONTAGEM_LIKE.ID_USUARIO = ?";
+            preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
+            preparedStatement.setInt(1, likeStructure.getIdPost());
+            preparedStatement.setInt(2, Integer.parseInt(likeStructure.getIdAuthor()));
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                idUserPost = resultSet.getInt("TP.ID_USUARIO");
+                if (idUserPost != Integer.parseInt(likeStructure.getIdAuthor())) {
+                    if (likeStructure.getIsLike() != resultSet.getInt("LIKE_DESLIKE")) {
+                        SQLQuery = "UPDATE TB_CONTAGEM_LIKE SET LIKE_DESLIKE = ? WHERE ID = ?";
+                        preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
+                        preparedStatement.setInt(1, likeStructure.getIsLike());
+                        preparedStatement.setInt(2, resultSet.getInt("ID"));
+                        preparedStatement.executeUpdate();
+
+                        connection.close();
+                        return "Atualização do Like/Deslike realizado com sucesso!";
+                    }
+
+                    SQLQuery = "DELETE FROM TB_CONTAGEM_LIKE WHERE ID = ? AND LIKE_DESLIKE = ?";
                     preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
-                    preparedStatement.setInt(1, likeStructure.getIsLike());
-                    preparedStatement.setInt(2, resultSet.getInt("ID"));
+                    preparedStatement.setInt(1, resultSet.getInt("ID"));
+                    preparedStatement.setInt(2, likeStructure.getIsLike());
                     preparedStatement.executeUpdate();
 
+
                     connection.close();
-                    return "Atualização do Like/Deslike realizado com sucesso!";
+                    return "Remoção do Like/Deslike realizado com sucesso!";
+                }
+            }
+
+            if (likeStructure.isExclude() == 0) {
+                if (idUserPost == Integer.parseInt(likeStructure.getIdAuthor())) {
+                    connection.close();
+                    return "Usuário não pode dar like na própria postagem!";
                 }
 
-                SQLQuery = "DELETE FROM TB_CONTAGEM_LIKE WHERE ID = ? AND LIKE_DESLIKE = ?";
+                SQLQuery = "INSERT INTO TB_CONTAGEM_LIKE (ID_POSTAGEM, ID_USUARIO, LIKE_DESLIKE) VALUES (?, ?, ?)";
                 preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
-                preparedStatement.setInt(1, resultSet.getInt("ID"));
-                preparedStatement.setInt(2, likeStructure.getIsLike());
+                preparedStatement.setInt(1, likeStructure.getIdPost());
+                preparedStatement.setInt(2, Integer.parseInt(likeStructure.getIdAuthor()));
+                preparedStatement.setInt(3, likeStructure.getIsLike());
                 preparedStatement.executeUpdate();
 
 
                 connection.close();
-                return "Remoção do Like/Deslike realizado com sucesso!";
+                return "Like/Deslike realizado com sucesso!";
+
             }
-        }
-
-        if (likeStructure.isExclude() == 0) {
-            if (idUsuarioPostagem == likeStructure.getIdAuthor()) {
-                connection.close();
-                return "Usuário não pode dar like na própria postagem!";
-            }
-
-            SQLQuery = "INSERT INTO TB_CONTAGEM_LIKE (ID_POSTAGEM, ID_USUARIO, LIKE_DESLIKE) VALUES (?, ?, ?)";
-            preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
-            preparedStatement.setInt(1, likeStructure.getIdPost());
-            preparedStatement.setInt(2, likeStructure.getIdAuthor());
-            preparedStatement.setInt(3, likeStructure.getIsLike());
-            preparedStatement.executeUpdate();
-
 
             connection.close();
-            return "Like/Deslike realizado com sucesso!";
-
+            return "Erro desconhecido!";
         }
 
         connection.close();
-        return "Erro desconhecido!";
+        return "Usuário inválido!";
     }
 
     private static ArrayList<LikeDeslikePost> getQtdLike() throws SQLException {
@@ -199,8 +202,6 @@ public class PostDAO {
         Connection connection = ConnectionFactory.getConnection();
         ResultSet resultSet = null;
         ArrayList<LikeDeslikePost> listLike = new ArrayList<>();
-        int like = 0;
-        int deslike = 0;
 
         String SQLQuery = "SELECT * FROM TB_CONTAGEM_LIKE";
 
@@ -211,7 +212,7 @@ public class PostDAO {
             listLike.add(
                     new LikeDeslikePost(
                             resultSet.getInt("ID_POSTAGEM"),
-                            resultSet.getInt("ID_USUARIO"),
+                            Integer.toString(resultSet.getInt("ID_USUARIO")),
                             resultSet.getInt("LIKE_DESLIKE")
                     )
             );
@@ -225,65 +226,90 @@ public class PostDAO {
         PreparedStatement preparedStatement;
         Connection connection = ConnectionFactory.getConnection();
         ResultSet resultSet = null;
+        String resultString = "Erro desconhecido!";
+        String token = postRequestBody.getUserId().split(";")[0];
+        postRequestBody.setUserId(postRequestBody.getUserId().split(";")[1]);
 
-        String SQLQuery = "SELECT * FROM TB_POSTAGEM WHERE ID = ?";
+        String SQLQuery = "SELECT * FROM TB_USUARIO WHERE ID = ? AND TOKEN = ?";
         preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
-        preparedStatement.setInt(1, postRequestBody.getPostId());
+        preparedStatement.setInt(1, Integer.parseInt(postRequestBody.getUserId()));
+        preparedStatement.setString(2, token);
         resultSet = preparedStatement.executeQuery();
 
 
-        while (resultSet.next()) {
+        if (resultSet.next()) {
+            SQLQuery = "SELECT * FROM TB_POSTAGEM WHERE ID = ?";
+            preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
+            preparedStatement.setInt(1, postRequestBody.getPostId());
+            resultSet = preparedStatement.executeQuery();
 
-            if (postRequestBody.getUserId() == resultSet.getInt("ID_USUARIO")) {
-                SQLQuery = "UPDATE TB_POSTAGEM " +
-                        "SET TITULO = ?, POSTAGEM = ?, LINGUAGEM_POSTAGEM = ?, DT_ATUALIZACAO = CURRENT_TIMESTAMP " +
-                        "WHERE ID = ?";
-                preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
-                preparedStatement.setString(1, postRequestBody.getTitle());
-                preparedStatement.setString(2, postRequestBody.getPostText());
-                preparedStatement.setString(3, postRequestBody.getProgrammingLanguage());
-                preparedStatement.setInt(4, postRequestBody.getPostId());
-                preparedStatement.executeUpdate();
-                connection.close();
 
-                return "Postagem editada com sucesso!";
-            } else {
+            while (resultSet.next()) {
 
-                connection.close();
-                return "Usuário não tem permissão para editar essa postagem!";
+                if (Integer.parseInt(postRequestBody.getUserId()) == resultSet.getInt("ID_USUARIO")) {
+                    SQLQuery = "UPDATE TB_POSTAGEM " +
+                            "SET TITULO = ?, POSTAGEM = ?, LINGUAGEM_POSTAGEM = ?, DT_ATUALIZACAO = CURRENT_TIMESTAMP " +
+                            "WHERE ID = ?";
+                    preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
+                    preparedStatement.setString(1, postRequestBody.getTitle());
+                    preparedStatement.setString(2, postRequestBody.getPostText());
+                    preparedStatement.setString(3, postRequestBody.getProgrammingLanguage());
+                    preparedStatement.setInt(4, postRequestBody.getPostId());
+                    preparedStatement.executeUpdate();
+
+                    resultString = "Postagem editada com sucesso!";
+                } else {
+                    resultString = "Usuário não tem permissão para editar essa postagem!";
+                }
             }
+        } else {
+            resultString = "Usuário inválido!";
         }
 
         connection.close();
-        return "Erro deseconhecido!";
+        return resultString;
     }
 
     public static String removePost(PostEdited postRequestBody) throws SQLException {
         PreparedStatement preparedStatement;
         Connection connection = ConnectionFactory.getConnection();
         ResultSet resultSet = null;
+        String resultString = "Erro desconhecido!";
+        String token = postRequestBody.getUserId().split(";")[0];
+        postRequestBody.setUserId(postRequestBody.getUserId().split(";")[1]);
 
-        String SQLQuery = "SELECT * FROM TB_POSTAGEM WHERE ID = ?";
-        preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
-        preparedStatement.setInt(1, postRequestBody.getPostId());
+        String SQLQuery = "SELECT * FROM TB_USUARIO WHERE ID = ? AND TOKEN = ?";
+        preparedStatement = connection.prepareStatement(SQLQuery);
+        preparedStatement.setInt(1, Integer.parseInt(postRequestBody.getUserId()));
+        preparedStatement.setString(2, token);
         resultSet = preparedStatement.executeQuery();
 
 
-        while (resultSet.next()) {
-            if (postRequestBody.getUserId() == resultSet.getInt("ID_USUARIO")) {
-                SQLQuery = "DELETE FROM TB_POSTAGEM WHERE ID = ?";
-                preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
-                preparedStatement.setInt(1, postRequestBody.getPostId());
-                preparedStatement.executeUpdate();
+        if (resultSet.next()) {
+            SQLQuery = "SELECT * FROM TB_POSTAGEM WHERE ID = ?";
+            preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
+            preparedStatement.setInt(1, postRequestBody.getPostId());
+            resultSet = preparedStatement.executeQuery();
 
-                return "Postagem removida com sucesso!";
-            } else {
-                return "Usuário não tem permissão para remover essa postagem!";
+
+            while (resultSet.next()) {
+                if (Integer.parseInt(postRequestBody.getUserId()) == resultSet.getInt("ID_USUARIO")) {
+                    SQLQuery = "DELETE FROM TB_POSTAGEM WHERE ID = ?";
+                    preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
+                    preparedStatement.setInt(1, postRequestBody.getPostId());
+                    preparedStatement.executeUpdate();
+
+                    resultString = "Postagem removida com sucesso!";
+                } else {
+                    resultString = "Usuário não tem permissão para remover essa postagem!";
+                }
             }
+        } else {
+            resultString = "Usuário inválido!";
         }
 
         connection.close();
-        return "Erro deseconhecido!";
+        return resultString;
     }
 }
 

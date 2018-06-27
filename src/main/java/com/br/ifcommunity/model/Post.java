@@ -7,7 +7,7 @@ import java.util.Objects;
 public class Post implements Serializable {
 
     private int postId;
-    private int authorId;
+    private String authorId;
     private String authorName;
     private String matterName;
     private String title;
@@ -52,11 +52,11 @@ public class Post implements Serializable {
         this.postId = postId;
     }
 
-    public int getAuthorId() {
+    public String getAuthorId() {
         return authorId;
     }
 
-    public void setAuthorId(int authorId) {
+    public void setAuthorId(String authorId) {
         this.authorId = authorId;
     }
 
@@ -154,7 +154,7 @@ public class Post implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         Post post = (Post) o;
         return postId == post.postId &&
-                authorId == post.authorId &&
+                authorId.equals(post.authorId) &&
                 isSpam == post.isSpam &&
                 Objects.equals(authorName, post.authorName) &&
                 Objects.equals(matterName, post.matterName) &&

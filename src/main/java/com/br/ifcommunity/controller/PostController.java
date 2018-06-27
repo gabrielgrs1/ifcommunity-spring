@@ -52,14 +52,25 @@ public class PostController {
 
 
     @RequestMapping(value = "/make", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Boolean> doPost(@RequestBody Post postRequestBody) {
+    public ResponseEntity<ArrayList<String>> doPost(@RequestBody Post postRequestBody) {
+        ArrayList<String> returnMessage = new ArrayList<>();
+
         try {
-            PostDAO.addPost(postRequestBody);
+            returnMessage.add(PostDAO.addPost(postRequestBody));
+
+            if (returnMessage.get(0).equals("Postagem inserida com sucesso!")) {
+                return ResponseEntity.ok().body(returnMessage);
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(returnMessage);
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
+            returnMessage.add(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(returnMessage);
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(true);
+
     }
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

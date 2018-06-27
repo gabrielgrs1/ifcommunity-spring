@@ -119,17 +119,18 @@ public class UserDAO {
         Connection connection = ConnectionFactory.getConnection();
         User user = null;
 
-        String SQLQuery = "UPDATE TB_USUARIO SET TOKEN = ?";
+        String SQLQuery = "UPDATE TB_USUARIO SET TOKEN = ? WHERE EMAIL = ? OR USUARIO = ?";
         preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
         preparedStatement.setString(1, HashGenerator.gerenerateHashUser());
+        preparedStatement.setString(2, userRequestBody.getUser());
+        preparedStatement.setString(3, userRequestBody.getUser());
         preparedStatement.executeUpdate();
 
-        SQLQuery = "SELECT * FROM VW_RECUPERA_ALUNO WHERE MATRICULA = ? OR EMAIL = ? OR USUARIO = ?";
+        SQLQuery = "SELECT * FROM VW_RECUPERA_ALUNO WHERE EMAIL = ? OR USUARIO = ?";
         preparedStatement = connection.prepareStatement(SQLQuery);
 
         preparedStatement.setString(1, userRequestBody.getUser());
         preparedStatement.setString(2, userRequestBody.getUser());
-        preparedStatement.setString(3, userRequestBody.getUser());
         resultSet = preparedStatement.executeQuery();
 
         if (resultSet.next()) {
@@ -170,14 +171,13 @@ public class UserDAO {
 
         preparedStatement = connection.prepareCall(SQLQuery);
 
-
         preparedStatement.setInt(1, Integer.parseInt(studentRequestBody.getUserId()));
         preparedStatement.setString(2, studentRequestBody.getMail());
         preparedStatement.setString(3, studentRequestBody.getName());
         preparedStatement.setString(4, studentRequestBody.getPhone());
         preparedStatement.setString(5, token);
 
-        resultSet = preparedStatement.executeQuery();
+        preparedStatement.executeQuery();
 
         SQLQuery = "SELECT * FROM VW_RECUPERA_ALUNO WHERE EMAIL = ?";
         preparedStatement = connection.prepareStatement(SQLQuery);

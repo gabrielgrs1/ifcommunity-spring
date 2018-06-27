@@ -5,14 +5,14 @@ import java.util.Objects;
 
 public class LikeDeslikePost implements Serializable {
     private int idPost;
-    private int idAuthor;
+    private String idAuthor;
     private int isLike;
     private int isExclude;
 
     public LikeDeslikePost() {
     }
 
-    public LikeDeslikePost(int idPost, int idAuthor, int isLike) {
+    public LikeDeslikePost(int idPost, String idAuthor, int isLike) {
         this.idPost = idPost;
         this.idAuthor = idAuthor;
         this.isLike = isLike;
@@ -22,7 +22,7 @@ public class LikeDeslikePost implements Serializable {
         this.idPost = idPost;
     }
 
-    public void setIdAuthor(int idAuthor) {
+    public void setIdAuthor(String idAuthor) {
         this.idAuthor = idAuthor;
     }
 
@@ -42,7 +42,7 @@ public class LikeDeslikePost implements Serializable {
         return idPost;
     }
 
-    public int getIdAuthor() {
+    public String getIdAuthor() {
         return idAuthor;
     }
 
@@ -71,7 +71,7 @@ public class LikeDeslikePost implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         LikeDeslikePost that = (LikeDeslikePost) o;
         return idPost == that.idPost &&
-                idAuthor == that.idAuthor &&
+                idAuthor.equals(that.idAuthor) &&
                 isLike == that.isLike &&
                 isExclude == that.isExclude;
     }

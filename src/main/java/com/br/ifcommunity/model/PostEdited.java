@@ -5,7 +5,7 @@ import java.util.Objects;
 public class PostEdited {
 
     private int postId;
-    private int userId;
+    private String userId;
     private String title;
     private String postText;
     private String programmingLanguage;
@@ -21,11 +21,11 @@ public class PostEdited {
         this.postId = postId;
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
@@ -70,7 +70,7 @@ public class PostEdited {
         if (o == null || getClass() != o.getClass()) return false;
         PostEdited that = (PostEdited) o;
         return postId == that.postId &&
-                userId == that.userId &&
+                Objects.equals(userId, that.userId) &&
                 Objects.equals(title, that.title) &&
                 Objects.equals(postText, that.postText) &&
                 Objects.equals(programmingLanguage, that.programmingLanguage);
