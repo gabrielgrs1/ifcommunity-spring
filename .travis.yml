@@ -8,3 +8,4 @@ env:
   - MAVEN_VERSION=3.3.9
 install:
   - "mvn -N io.takari:maven:wrapper -Dmaven=${MAVEN_VERSION}"
+  - "./mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V"
