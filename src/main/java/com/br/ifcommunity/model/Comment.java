@@ -6,7 +6,7 @@ import java.util.Objects;
 public class Comment implements Serializable {
 
     private int postId;
-    private int authorId;
+    private String userId;
     private int commentId;
     private String authorName;
     private String commentText;
@@ -27,9 +27,9 @@ public class Comment implements Serializable {
         this.registerDate = registerDate;
     }
 
-    public Comment(int postId, int authorId, String commentText) {
+    public Comment(int postId, String userId, String commentText) {
         this.postId = postId;
-        this.authorId = authorId;
+        this.userId = userId;
         this.commentText = commentText;
     }
 
@@ -41,8 +41,8 @@ public class Comment implements Serializable {
         return authorName;
     }
 
-    public int getAuthorId() {
-        return authorId;
+    public String getUserId() {
+        return userId;
     }
 
     public String getCommentText() {
@@ -62,7 +62,7 @@ public class Comment implements Serializable {
     public String toString() {
         return "Comment{" +
                 "postId=" + postId +
-                ", authorId=" + authorId +
+                ", userId=" + userId +
                 ", authorName='" + authorName + '\'' +
                 ", commentText='" + commentText + '\'' +
                 ", registerDate='" + registerDate + '\'' +
@@ -75,7 +75,7 @@ public class Comment implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         Comment comment = (Comment) o;
         return postId == comment.postId &&
-                authorId == comment.authorId &&
+                Objects.equals(userId, comment.userId) &&
                 Objects.equals(authorName, comment.authorName) &&
                 Objects.equals(commentText, comment.commentText) &&
                 Objects.equals(registerDate, comment.registerDate);
@@ -84,6 +84,6 @@ public class Comment implements Serializable {
     @Override
     public int hashCode() {
 
-        return Objects.hash(postId, authorId, authorName, commentText, registerDate);
+        return Objects.hash(postId, userId, authorName, commentText, registerDate);
     }
 }

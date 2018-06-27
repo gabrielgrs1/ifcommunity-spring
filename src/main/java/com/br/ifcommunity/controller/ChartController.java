@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 @Controller
 @CrossOrigin(origins = "*")
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 public class ChartController {
 
     @RequestMapping(value = "/charts", method = RequestMethod.GET)
-    public ResponseEntity<ArrayList<Chart>> getChartsInfo(@RequestParam int userId) {
+    public ResponseEntity getChartsInfo(@RequestParam int userId) {
         ArrayList<Chart> chartsInfoList = null;
 
         try {
@@ -33,6 +34,8 @@ public class ChartController {
 
         } catch (SQLException e) {
             e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonList(e.getMessage()));
+
         }
 
         return ResponseEntity.ok().body(chartsInfoList);

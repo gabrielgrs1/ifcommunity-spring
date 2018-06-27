@@ -62,15 +62,14 @@ public class UserDAO {
 
     public static User register(User user) throws SQLException {
 //        String encryptedPassword = new EncryptPassword(user.getPassword()).encrypt();
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
         Connection connection = ConnectionFactory.getConnection();
         User student = null;
 
         String SQLQuery = "CALL CADASTRO_USUARIO(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-
-        preparedStatement = connection.prepareCall(SQLQuery);
+        preparedStatement = Objects.requireNonNull(connection).prepareCall(SQLQuery);
 
         preparedStatement.setString(1, user.getUser());
         preparedStatement.setString(2, user.getPassword());
@@ -114,8 +113,8 @@ public class UserDAO {
     }
 
     public static User login(User userRequestBody) throws SQLException {
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
         Connection connection = ConnectionFactory.getConnection();
         User user = null;
 
@@ -160,8 +159,8 @@ public class UserDAO {
     }
 
     public static User updateStudent(User studentRequestBody) throws SQLException {
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
         Connection connection = ConnectionFactory.getConnection();
         User student = null;
         String token = studentRequestBody.getUserId().split(";")[0];
@@ -169,7 +168,7 @@ public class UserDAO {
 
         String SQLQuery = "CALL SP_ATUALIZA_PERFIL(?, ?, ?, ?, ?)";
 
-        preparedStatement = connection.prepareCall(SQLQuery);
+        preparedStatement = Objects.requireNonNull(connection).prepareCall(SQLQuery);
 
         preparedStatement.setInt(1, Integer.parseInt(studentRequestBody.getUserId()));
         preparedStatement.setString(2, studentRequestBody.getMail());
@@ -207,9 +206,9 @@ public class UserDAO {
     }
 
     public static String verifyIsNotRegister(String verifyString) throws SQLException {
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        String SQLQuery = null;
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        String SQLQuery;
         Connection connection = ConnectionFactory.getConnection();
 
         if (verifyString.contains("@")) {
@@ -225,7 +224,7 @@ public class UserDAO {
         } else if (VerificationRegister.enrolledNumberValidate(verifyString)) {
             SQLQuery = "SELECT * FROM TB_ALUNO WHERE MATRICULA = ?";
 
-            preparedStatement = connection.prepareCall(SQLQuery);
+            preparedStatement = Objects.requireNonNull(connection).prepareCall(SQLQuery);
             preparedStatement.setString(1, verifyString);
             resultSet = preparedStatement.executeQuery();
 
@@ -248,15 +247,15 @@ public class UserDAO {
     }
 
     public static int uploadPhoto(User user) throws SQLException {
-        PreparedStatement preparedStatement = null;
-        int resultSet = 0;
+        PreparedStatement preparedStatement;
+        int resultSet;
         Connection connection = ConnectionFactory.getConnection();
         String token = user.getUserId().split(";")[0];
         user.setUserId(user.getUserId().split(";")[1]);
 
         String SQLQuery = "UPDATE TB_USUARIO SET HASH_FOTO = ? WHERE ID = ? AND TOKEN = ? ";
 
-        preparedStatement = connection.prepareCall(SQLQuery);
+        preparedStatement = Objects.requireNonNull(connection).prepareCall(SQLQuery);
 
         preparedStatement.setString(1, user.getPhotoHash());
         preparedStatement.setInt(2, Integer.parseInt(user.getUserId()));

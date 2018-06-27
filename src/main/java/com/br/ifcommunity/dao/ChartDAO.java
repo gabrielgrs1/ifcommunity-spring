@@ -16,7 +16,7 @@ public class ChartDAO {
         ResultSet resultSet;
         Connection connection = ConnectionFactory.getConnection();
         ArrayList<Chart> chartList = new ArrayList<>();
-        Chart chart = null;
+        Chart chart;
         int like = 0;
         int deslike = 0;
 

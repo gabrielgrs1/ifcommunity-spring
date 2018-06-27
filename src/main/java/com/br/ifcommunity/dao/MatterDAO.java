@@ -16,8 +16,8 @@ import java.util.Objects;
 public class MatterDAO {
 
     public static ArrayList<Matter> getAllMatters() throws SQLException {
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
         Connection connection = ConnectionFactory.getConnection();
         ArrayList<Matter> mattersList = new ArrayList<>();
 
@@ -38,8 +38,8 @@ public class MatterDAO {
     }
 
     public static ArrayList<Matter> getUserMatters(int studentId) throws SQLException {
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
         Connection connection = ConnectionFactory.getConnection();
         ArrayList<Matter> mattersList = new ArrayList<>();
 
@@ -63,10 +63,11 @@ public class MatterDAO {
         return mattersList;
     }
 
-    public static void updateMattersUser(MatterUser responseBody) throws SQLException {
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
+    public static String updateMattersUser(MatterUser responseBody) throws SQLException {
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
         Connection connection = ConnectionFactory.getConnection();
+        String resultString;
         List<String> matterList = Arrays.asList(responseBody.getMatter1(),
                 responseBody.getMatter2(),
                 responseBody.getMatter3(),
@@ -94,11 +95,11 @@ public class MatterDAO {
             preparedStatement.executeUpdate();
 
             if (matterList.get(0) != null) {
-                for (int i = 0; i < matterList.size(); i++) {
-                    if (matterList.get(i) != null) {
+                for (String matter : matterList) {
+                    if (matter != null) {
                         SQLQuery = "SELECT ID FROM TB_MATERIA WHERE NOME_MATERIA = ?";
                         preparedStatement = connection.prepareCall(SQLQuery);
-                        preparedStatement.setString(1, matterList.get(i));
+                        preparedStatement.setString(1, matter);
                         resultSet = preparedStatement.executeQuery();
 
                         while (resultSet.next()) {
@@ -108,12 +109,18 @@ public class MatterDAO {
                             preparedStatement = connection.prepareCall(SQLQuery);
                             preparedStatement.setInt(1, resultSet.getInt("ID"));
                             preparedStatement.setInt(2, Integer.parseInt(userId));
-                            preparedStatement.execute();
                         }
                     }
                 }
             }
+
+            resultString = "Matérias atualizadas com sucesso!";
+        } else {
+            resultString = "Usuário inválido!";
         }
+
+
         connection.close();
+        return resultString;
     }
 }

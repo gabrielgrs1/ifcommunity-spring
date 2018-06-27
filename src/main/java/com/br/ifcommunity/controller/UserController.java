@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
+import java.util.Collections;
 
 @Controller
 @CrossOrigin(origins = "*")
@@ -16,7 +17,7 @@ import java.sql.SQLException;
 public class UserController {
 
     @RequestMapping(value = "/register", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> registerUser(@RequestBody User user) {
+    public ResponseEntity registerUser(@RequestBody User user) {
         System.out.println("[REGISTRO] User passado pelo front: " + user);
 
         try {
@@ -28,32 +29,31 @@ public class UserController {
                 return new ResponseEntity<>(HttpStatus.CONFLICT);
             }
         } catch (SQLException e) {
-            System.out.println(e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonList(e.getMessage()));
         }
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = "application/json")
-    public ResponseEntity<User> login(@RequestBody User user) {
+    public ResponseEntity login(@RequestBody User user) {
         System.out.println("[LOGIN] User passado pelo front: " + user);
 
         try {
             user = UserDAO.login(user);
 
             if (user == null) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                return new ResponseEntity(HttpStatus.NO_CONTENT);
             }
 
+            return ResponseEntity.ok().body(user);
         } catch (SQLException e) {
-            System.out.println(e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonList(e.getMessage()));
         }
-
-        return ResponseEntity.ok().body(user);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> udpateUser(@RequestBody User user) {
+    public ResponseEntity udpateUser(@RequestBody User user) {
         System.out.println("[ATUALIZA USUARIO] User passado pelo front: " + user);
 
         try {
@@ -65,24 +65,24 @@ public class UserController {
                 return ResponseEntity.ok().body(user);
             }
         } catch (SQLException e) {
-            System.err.println(e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonList(e.getMessage()));
         }
     }
 
     @RequestMapping(value = "/verify", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> verifyIsNotRegister(@RequestParam String verifyString) {
+    public ResponseEntity verifyIsNotRegister(@RequestParam String verifyString) {
         String verifyError;
 
         try {
             verifyError = UserDAO.verifyIsNotRegister(verifyString);
-            return ResponseEntity.ok().body(verifyError);
+
+            return ResponseEntity.ok().body(Collections.singletonList(verifyError));
 
         } catch (SQLException e) {
-            System.err.println(e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonList(e.getMessage()));
         }
-
     }
 
     @RequestMapping(value = "/photo", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -97,8 +97,8 @@ public class UserController {
                 return new ResponseEntity(HttpStatus.OK);
             }
         } catch (SQLException e) {
-            System.err.println(e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonList(e.getMessage()));
         }
     }
 }

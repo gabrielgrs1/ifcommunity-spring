@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 
 @Controller
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 public class MatterController {
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ArrayList<Matter>> getAllMatters() {
+    public ResponseEntity getAllMatters() {
         ArrayList<Matter> matterlist = null;
 
         try {
@@ -32,13 +33,14 @@ public class MatterController {
 
         } catch (SQLException e) {
             e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonList(e.getMessage()));
         }
 
         return ResponseEntity.ok().body(matterlist);
     }
 
     @RequestMapping(value = "/user", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ArrayList<Matter>> getMatterById(@RequestParam int studentId) {
+    public ResponseEntity getMatterById(@RequestParam int studentId) {
         ArrayList<Matter> matterlist = null;
 
         try {
@@ -50,6 +52,7 @@ public class MatterController {
 
         } catch (SQLException e) {
             e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonList(e.getMessage()));
         }
 
         return ResponseEntity.ok().body(matterlist);
@@ -57,16 +60,20 @@ public class MatterController {
 
 
     @RequestMapping(value = "/user", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Boolean> updateMattersUser(@RequestBody MatterUser responseBody) {
-
+    public ResponseEntity updateMattersUser(@RequestBody MatterUser responseBody) {
+        String resultString;
         try {
-            MatterDAO.updateMattersUser(responseBody);
+            resultString = MatterDAO.updateMattersUser(responseBody);
+
+            if (resultString.equals("Matérias atualizadas com sucesso!")) {
+                return ResponseEntity.status(HttpStatus.OK).body(Collections.singletonList(resultString));
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonList(resultString));
+
+            }
         } catch (SQLException e) {
             e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonList(e.getMessage()));
         }
-
-        return ResponseEntity.status(HttpStatus.OK).body(true);
     }
-
-
 }

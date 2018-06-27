@@ -123,7 +123,7 @@ public class PostDAO {
     public static String likeDeslike(LikeDeslikePost likeStructure) throws SQLException {
         PreparedStatement preparedStatement;
         Connection connection = ConnectionFactory.getConnection();
-        ResultSet resultSet = null;
+        ResultSet resultSet;
         int idUserPost = 0;
         String token = likeStructure.getIdAuthor().split(";")[0];
         likeStructure.setIdAuthor(likeStructure.getIdAuthor().split(";")[1]);
@@ -200,7 +200,7 @@ public class PostDAO {
     private static ArrayList<LikeDeslikePost> getQtdLike() throws SQLException {
         PreparedStatement preparedStatement;
         Connection connection = ConnectionFactory.getConnection();
-        ResultSet resultSet = null;
+        ResultSet resultSet;
         ArrayList<LikeDeslikePost> listLike = new ArrayList<>();
 
         String SQLQuery = "SELECT * FROM TB_CONTAGEM_LIKE";
@@ -225,7 +225,7 @@ public class PostDAO {
     public static String editPost(PostEdited postRequestBody) throws SQLException {
         PreparedStatement preparedStatement;
         Connection connection = ConnectionFactory.getConnection();
-        ResultSet resultSet = null;
+        ResultSet resultSet;
         String resultString = "Erro desconhecido!";
         String token = postRequestBody.getUserId().split(";")[0];
         postRequestBody.setUserId(postRequestBody.getUserId().split(";")[1]);
@@ -273,13 +273,13 @@ public class PostDAO {
     public static String removePost(PostEdited postRequestBody) throws SQLException {
         PreparedStatement preparedStatement;
         Connection connection = ConnectionFactory.getConnection();
-        ResultSet resultSet = null;
+        ResultSet resultSet;
         String resultString = "Erro desconhecido!";
         String token = postRequestBody.getUserId().split(";")[0];
         postRequestBody.setUserId(postRequestBody.getUserId().split(";")[1]);
 
         String SQLQuery = "SELECT * FROM TB_USUARIO WHERE ID = ? AND TOKEN = ?";
-        preparedStatement = connection.prepareStatement(SQLQuery);
+        preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
         preparedStatement.setInt(1, Integer.parseInt(postRequestBody.getUserId()));
         preparedStatement.setString(2, token);
         resultSet = preparedStatement.executeQuery();

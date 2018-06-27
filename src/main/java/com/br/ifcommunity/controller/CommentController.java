@@ -10,13 +10,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 @Controller
 @CrossOrigin(origins = "*")
 @RequestMapping(value = "/post")
 public class CommentController {
     @RequestMapping(value = "/comment", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ArrayList<String>> comment(@RequestBody Comment comment) {
+    public ResponseEntity comment(@RequestBody Comment comment) {
         ArrayList<String> returnMessage = new ArrayList<>();
 
         try {
@@ -25,28 +26,30 @@ public class CommentController {
             if (returnMessage.get(0).equals("Erro desconhecido!")) {
                 return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(returnMessage);
             }
+            return ResponseEntity.ok().body(returnMessage);
         } catch (SQLException e) {
             e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonList(e.getMessage()));
         }
-
-        return ResponseEntity.ok().body(returnMessage);
     }
 
     @RequestMapping(value = "/comment", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ArrayList<Comment>> comment(@RequestParam int postId) {
-        ArrayList<Comment> commentList = new ArrayList<>();
+    public ResponseEntity comment(@RequestParam int postId) {
+        ArrayList<Comment> commentList;
 
         try {
             commentList = CommentDAO.getComments(postId);
 
-            if (commentList.size() == 0) {
+            if (commentList == null) {
                 commentList.add(new Comment("Falha ao buscar os comentários, ou nenhum comentário foi encontrado!"));
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).body(commentList);
             }
+            return ResponseEntity.ok().body(commentList);
         } catch (SQLException e) {
             e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonList(e.getMessage()));
+
         }
 
-        return ResponseEntity.ok().body(commentList);
     }
 }

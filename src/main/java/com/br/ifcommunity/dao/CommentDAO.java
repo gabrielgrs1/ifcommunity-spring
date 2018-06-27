@@ -12,24 +12,38 @@ import java.util.Objects;
 
 public class CommentDAO {
     public static String comment(Comment comment) throws SQLException {
-        PreparedStatement preparedStatement = null;
-        int resultSet = 0;
+        PreparedStatement preparedStatement;
+        int resultSetInt;
+        ResultSet resultSet;
         Connection connection = ConnectionFactory.getConnection();
-        String SQLQuery = "";
 
+        String token = comment.getUserId().split(";")[0];
+        String userId = comment.getUserId().split(";")[1];
 
-        SQLQuery = "INSERT INTO TB_COMENTARIO_POSTAGEM (ID_COMENTARISTA, ID_POSTAGEM, COMENTARIO) VALUES (?, ?, ?)";
-        preparedStatement = Objects.requireNonNull(connection).prepareCall(SQLQuery);
-        preparedStatement.setInt(1, comment.getAuthorId());
-        preparedStatement.setInt(2, comment.getPostId());
-        preparedStatement.setString(3, comment.getCommentText());
-        resultSet = preparedStatement.executeUpdate();
+        String SQLQuery = "SELECT * FROM TB_USUARIO WHERE ID = ? AND TOKEN = ?";
+        preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
+        preparedStatement.setInt(1, Integer.parseInt(userId));
+        preparedStatement.setString(2, token);
+        resultSet = preparedStatement.executeQuery();
 
-        if (resultSet != 0) {
+        if (resultSet.next()) {
+
+            SQLQuery = "INSERT INTO TB_COMENTARIO_POSTAGEM (ID_COMENTARISTA, ID_POSTAGEM, COMENTARIO) VALUES (?, ?, ?)";
+            preparedStatement = Objects.requireNonNull(connection).prepareCall(SQLQuery);
+            preparedStatement.setInt(1, Integer.parseInt(userId));
+            preparedStatement.setInt(2, comment.getPostId());
+            preparedStatement.setString(3, comment.getCommentText());
+            resultSetInt = preparedStatement.executeUpdate();
+
+            if (resultSetInt != 0) {
+                connection.close();
+                return "Comentário inserido com sucesso!";
+            }
+
+        } else {
             connection.close();
-            return "Comentário inserido com sucesso!";
+            return "Usuário inválido!";
         }
-
         connection.close();
         return "Erro desconhecido!";
     }
