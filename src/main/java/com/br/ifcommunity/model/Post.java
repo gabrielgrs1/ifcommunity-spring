@@ -17,6 +17,7 @@ public class Post implements Serializable {
     private String registerDate;
     private String updateDate;
     private ArrayList<LikeDeslikePost> likeDeslikePosts;
+    private String hashPhotoAutor;
 
     public Post() {
     }
@@ -32,7 +33,7 @@ public class Post implements Serializable {
         likeDeslikePosts = new ArrayList<>();
     }
 
-    public Post(int postId, String authorName, String matterName, String title, String postText, String programmingLanguage, String registerDate, String updateDate) {
+    public Post(int postId, String authorName, String matterName, String title, String postText, String programmingLanguage, String registerDate, String updateDate, String hashPhotoAutor) {
         this.postId = postId;
         this.authorName = authorName;
         this.matterName = matterName;
@@ -41,7 +42,16 @@ public class Post implements Serializable {
         this.programmingLanguage = programmingLanguage;
         this.registerDate = registerDate;
         this.updateDate = updateDate;
-        likeDeslikePosts = new ArrayList<>();
+        this.likeDeslikePosts = new ArrayList<>();
+        this.hashPhotoAutor = hashPhotoAutor;
+    }
+
+    public String getHashPhotoAutor() {
+        return hashPhotoAutor;
+    }
+
+    public void setHashPhotoAutor(String hashPhotoAutor) {
+        this.hashPhotoAutor = hashPhotoAutor;
     }
 
     public int getPostId() {
@@ -132,11 +142,12 @@ public class Post implements Serializable {
         this.likeDeslikePosts = likeDeslikePosts;
     }
 
+
     @Override
     public String toString() {
         return "Post{" +
                 "postId=" + postId +
-                ", authorId=" + authorId +
+                ", authorId='" + authorId + '\'' +
                 ", authorName='" + authorName + '\'' +
                 ", matterName='" + matterName + '\'' +
                 ", title='" + title + '\'' +
@@ -145,6 +156,8 @@ public class Post implements Serializable {
                 ", isSpam=" + isSpam +
                 ", registerDate='" + registerDate + '\'' +
                 ", updateDate='" + updateDate + '\'' +
+                ", likeDeslikePosts=" + likeDeslikePosts +
+                ", hashPhotoAutor='" + hashPhotoAutor + '\'' +
                 '}';
     }
 
@@ -154,20 +167,22 @@ public class Post implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         Post post = (Post) o;
         return postId == post.postId &&
-                authorId.equals(post.authorId) &&
                 isSpam == post.isSpam &&
+                Objects.equals(authorId, post.authorId) &&
                 Objects.equals(authorName, post.authorName) &&
                 Objects.equals(matterName, post.matterName) &&
                 Objects.equals(title, post.title) &&
                 Objects.equals(postText, post.postText) &&
                 Objects.equals(programmingLanguage, post.programmingLanguage) &&
                 Objects.equals(registerDate, post.registerDate) &&
-                Objects.equals(updateDate, post.updateDate);
+                Objects.equals(updateDate, post.updateDate) &&
+                Objects.equals(likeDeslikePosts, post.likeDeslikePosts) &&
+                Objects.equals(hashPhotoAutor, post.hashPhotoAutor);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(postId, authorId, authorName, matterName, title, postText, programmingLanguage, isSpam, registerDate, updateDate);
+        return Objects.hash(postId, authorId, authorName, matterName, title, postText, programmingLanguage, isSpam, registerDate, updateDate, likeDeslikePosts, hashPhotoAutor);
     }
 }

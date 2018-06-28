@@ -333,7 +333,8 @@ public class PostDAO {
                     resultSet.getString("POSTAGEM"),
                     resultSet.getString("LINGUAGEM_POSTAGEM"),
                     resultSet.getString("DATA_REGISTRO"),
-                    resultSet.getString("DATA_ATUALIZACAO"));
+                    resultSet.getString("DATA_ATUALIZACAO"),
+                    resultSet.getString("FOTO_AUTOR"));
 
             for (int i = 0; i < likeDeslikePostArrayList.size(); i++) {
                 if (likeDeslikePostArrayList.get(i).getIdPost() == resultSet.getInt("ID_POSTAGEM")) {

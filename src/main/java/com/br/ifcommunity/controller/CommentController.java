@@ -26,6 +26,7 @@ public class CommentController {
             if (returnMessage.get(0).equals("Erro desconhecido!")) {
                 return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(returnMessage);
             }
+
             return ResponseEntity.ok().body(returnMessage);
         } catch (SQLException e) {
             e.printStackTrace();
