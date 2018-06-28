@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class MatterUser implements Serializable {
 
-    private String studentId;
+    private String userId;
     private String matter1;
     private String matter2;
     private String matter3;
@@ -17,8 +17,8 @@ public class MatterUser implements Serializable {
     public MatterUser() {
     }
 
-    public MatterUser(String studentId, String matter1, String matter2, String matter3, String matter4, String matter5, String matter6, String matter7) {
-        this.studentId = studentId;
+    public MatterUser(String userId, String matter1, String matter2, String matter3, String matter4, String matter5, String matter6, String matter7) {
+        this.userId = userId;
         this.matter1 = matter1;
         this.matter2 = matter2;
         this.matter3 = matter3;
@@ -28,8 +28,8 @@ public class MatterUser implements Serializable {
         this.matter7 = matter7;
     }
 
-    public String getStudentId() {
-        return studentId;
+    public String getUserId() {
+        return userId;
     }
 
     public String getMatter1() {
@@ -60,8 +60,8 @@ public class MatterUser implements Serializable {
         return matter7;
     }
 
-    public void setStudentId(String studentId) {
-        this.studentId = studentId;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public void setMatter1(String matter1) {
@@ -97,7 +97,7 @@ public class MatterUser implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MatterUser that = (MatterUser) o;
-        return studentId == that.studentId &&
+        return Objects.equals(userId, that.userId) &&
                 Objects.equals(matter1, that.matter1) &&
                 Objects.equals(matter2, that.matter2) &&
                 Objects.equals(matter3, that.matter3) &&
@@ -110,13 +110,13 @@ public class MatterUser implements Serializable {
     @Override
     public int hashCode() {
 
-        return Objects.hash(studentId, matter1, matter2, matter3, matter4, matter5, matter6, matter7);
+        return Objects.hash(userId, matter1, matter2, matter3, matter4, matter5, matter6, matter7);
     }
 
     @Override
     public String toString() {
         return "MatterUser{" +
-                "studentId=" + studentId +
+                "userId=" + userId +
                 ", matter1='" + matter1 + '\'' +
                 ", matter2='" + matter2 + '\'' +
                 ", matter3='" + matter3 + '\'' +

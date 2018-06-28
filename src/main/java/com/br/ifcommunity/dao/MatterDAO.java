@@ -76,14 +76,14 @@ public class MatterDAO {
                 responseBody.getMatter6(),
                 responseBody.getMatter7());
 
-        System.out.println("Matérias passadas pelo front: " + matterList);
+        System.out.println("Objeto retornado pelo front: " + responseBody);
 
-        String token = responseBody.getStudentId().split(";")[0];
-        String userId = responseBody.getStudentId().split(";")[1];
+        String token = responseBody.getUserId().split(";")[0];
+        responseBody.setUserId(responseBody.getUserId().split(";")[1]);
 
         String SQLQuery = "SELECT * FROM TB_USUARIO WHERE ID = ? AND TOKEN = ?";
-        preparedStatement = connection.prepareStatement(SQLQuery);
-        preparedStatement.setInt(1, Integer.parseInt(userId));
+        preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
+        preparedStatement.setInt(1, Integer.parseInt(responseBody.getUserId()));
         preparedStatement.setString(2, token);
         resultSet = preparedStatement.executeQuery();
 
@@ -91,25 +91,25 @@ public class MatterDAO {
             SQLQuery = "DELETE FROM TB_MATERIA_ALUNO WHERE ID_ALUNO = " +
                     "(SELECT ID FROM TB_ALUNO WHERE ID_USUARIO = ?)";
             preparedStatement = connection.prepareCall(SQLQuery);
-            preparedStatement.setInt(1, Integer.parseInt(userId));
+            preparedStatement.setInt(1, Integer.parseInt(responseBody.getUserId()));
             preparedStatement.executeUpdate();
 
             if (matterList.get(0) != null) {
-                for (String matter : matterList) {
-                    if (matter != null) {
-                        SQLQuery = "SELECT ID FROM TB_MATERIA WHERE NOME_MATERIA = ?";
-                        preparedStatement = connection.prepareCall(SQLQuery);
-                        preparedStatement.setString(1, matter);
-                        resultSet = preparedStatement.executeQuery();
+                for (String matterName : matterList) {
+                    SQLQuery = "SELECT ID FROM TB_MATERIA WHERE NOME_MATERIA = ?";
+                    preparedStatement = connection.prepareCall(SQLQuery);
+                    preparedStatement.setString(1, matterName);
+                    resultSet = preparedStatement.executeQuery();
 
-                        while (resultSet.next()) {
-                            SQLQuery = "INSERT INTO TB_MATERIA_ALUNO (ID_MATERIA, ID_ALUNO) " +
-                                    "VALUES (?, " +
-                                    "(SELECT ID FROM TB_ALUNO WHERE ID_USUARIO = ?))";
-                            preparedStatement = connection.prepareCall(SQLQuery);
-                            preparedStatement.setInt(1, resultSet.getInt("ID"));
-                            preparedStatement.setInt(2, Integer.parseInt(userId));
-                        }
+                    while (resultSet.next()) {
+                        System.out.println("MatterID: " + resultSet.getInt("ID"));
+                        System.out.println("UserID: " + Integer.parseInt(responseBody.getUserId()));
+                        SQLQuery = "INSERT INTO TB_MATERIA_ALUNO (ID_MATERIA, ID_ALUNO) VALUES (?, " +
+                                "(SELECT ID FROM TB_ALUNO WHERE ID_USUARIO = ?))";
+                        preparedStatement = connection.prepareCall(SQLQuery);
+                        preparedStatement.setInt(1, resultSet.getInt("ID"));
+                        preparedStatement.setInt(2, Integer.parseInt(responseBody.getUserId()));
+                        preparedStatement.execute();
                     }
                 }
             }

@@ -41,7 +41,7 @@ public class MatterController {
 
     @RequestMapping(value = "/user", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getMatterById(@RequestParam int studentId) {
-        ArrayList<Matter> matterlist = null;
+        ArrayList<Matter> matterlist;
 
         try {
             matterlist = MatterDAO.getUserMatters(studentId);
