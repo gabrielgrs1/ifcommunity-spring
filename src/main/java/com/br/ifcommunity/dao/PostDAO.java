@@ -97,24 +97,7 @@ public class PostDAO {
 
         resultSet = preparedStatement.executeQuery();
 
-        while (resultSet.next()) {
-            Post post = new Post(resultSet.getInt("ID_POSTAGEM"),
-                    resultSet.getString("AUTOR"),
-                    resultSet.getString("MATERIA"),
-                    resultSet.getString("TITULO"),
-                    resultSet.getString("POSTAGEM"),
-                    resultSet.getString("LINGUAGEM_POSTAGEM"),
-                    resultSet.getString("DATA_REGISTRO"),
-                    resultSet.getString("DATA_ATUALIZACAO"));
-
-            for (int i = 0; i < likeDeslikePostArrayList.size(); i++) {
-                if (likeDeslikePostArrayList.get(i).getIdPost() == resultSet.getInt("ID_POSTAGEM")) {
-                    post.getLikeDeslikePosts().add(likeDeslikePostArrayList.get(i));
-                }
-            }
-
-            listPost.add(post);
-        }
+        makeArrayListPost(resultSet, listPost, likeDeslikePostArrayList);
 
         connection.close();
         return listPost;
@@ -310,6 +293,56 @@ public class PostDAO {
 
         connection.close();
         return resultString;
+    }
+
+    public static ArrayList<Post> searchPost(String searchKeyword, String matter) throws SQLException {
+        PreparedStatement preparedStatement;
+        Connection connection = ConnectionFactory.getConnection();
+        ResultSet resultSet;
+        ArrayList<Post> listPost = new ArrayList<>();
+        ArrayList<LikeDeslikePost> likeDeslikePostArrayList = getQtdLike();
+        searchKeyword = "%" + searchKeyword + "%";
+
+        String SQLQuery = "SELECT * FROM VW_RECUPERA_POSTAGEM WHERE" +
+                " MATERIA = ? AND AUTOR LIKE ?" +
+                " OR MATERIA = ? AND POSTAGEM LIKE ?" +
+                " OR MATERIA = ? AND TITULO LIKE ?" +
+                " OR MATERIA = ? AND LINGUAGEM_POSTAGEM LIKE ?";
+        preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
+        preparedStatement.setString(1, matter);
+        preparedStatement.setString(2, searchKeyword);
+        preparedStatement.setString(3, matter);
+        preparedStatement.setString(4, searchKeyword);
+        preparedStatement.setString(5, matter);
+        preparedStatement.setString(6, searchKeyword);
+        preparedStatement.setString(7, matter);
+        preparedStatement.setString(8, searchKeyword);
+        resultSet = preparedStatement.executeQuery();
+
+        makeArrayListPost(resultSet, listPost, likeDeslikePostArrayList);
+
+        return listPost;
+    }
+
+    private static void makeArrayListPost(ResultSet resultSet, ArrayList<Post> listPost, ArrayList<LikeDeslikePost> likeDeslikePostArrayList) throws SQLException {
+        while (resultSet.next()) {
+            Post post = new Post(resultSet.getInt("ID_POSTAGEM"),
+                    resultSet.getString("AUTOR"),
+                    resultSet.getString("MATERIA"),
+                    resultSet.getString("TITULO"),
+                    resultSet.getString("POSTAGEM"),
+                    resultSet.getString("LINGUAGEM_POSTAGEM"),
+                    resultSet.getString("DATA_REGISTRO"),
+                    resultSet.getString("DATA_ATUALIZACAO"));
+
+            for (int i = 0; i < likeDeslikePostArrayList.size(); i++) {
+                if (likeDeslikePostArrayList.get(i).getIdPost() == resultSet.getInt("ID_POSTAGEM")) {
+                    post.getLikeDeslikePosts().add(likeDeslikePostArrayList.get(i));
+                }
+            }
+
+            listPost.add(post);
+        }
     }
 }
 

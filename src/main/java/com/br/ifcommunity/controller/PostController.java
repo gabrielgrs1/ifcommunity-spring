@@ -7,6 +7,7 @@ import com.br.ifcommunity.model.PostEdited;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -104,9 +105,25 @@ public class PostController {
         } catch (SQLException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonList(e.getMessage()));
-
         }
+    }
 
+    @RequestMapping(value = "/search", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity searchPost(@RequestParam @NonNull String searchKeyword,  @NonNull String matter) {
+        ArrayList<Post> postArrayList;
+
+        try {
+            postArrayList = PostDAO.searchPost(searchKeyword, matter);
+
+            if (postArrayList.size() == 0) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(Collections.singletonList("Não foi encontrada nenhuma postagem!"));
+            }
+
+            return ResponseEntity.ok().body(postArrayList);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonList(e.getMessage()));
+        }
     }
 
 

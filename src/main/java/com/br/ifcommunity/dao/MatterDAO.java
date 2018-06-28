@@ -102,8 +102,6 @@ public class MatterDAO {
                     resultSet = preparedStatement.executeQuery();
 
                     while (resultSet.next()) {
-                        System.out.println("MatterID: " + resultSet.getInt("ID"));
-                        System.out.println("UserID: " + Integer.parseInt(responseBody.getUserId()));
                         SQLQuery = "INSERT INTO TB_MATERIA_ALUNO (ID_MATERIA, ID_ALUNO) VALUES (?, " +
                                 "(SELECT ID FROM TB_ALUNO WHERE ID_USUARIO = ?))";
                         preparedStatement = connection.prepareCall(SQLQuery);
