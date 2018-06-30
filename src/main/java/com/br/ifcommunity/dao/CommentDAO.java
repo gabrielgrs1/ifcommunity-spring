@@ -2,6 +2,7 @@ package com.br.ifcommunity.dao;
 
 import com.br.ifcommunity.model.Comment;
 import com.br.ifcommunity.util.ConnectionFactory;
+import com.br.ifcommunity.util.WordFilter;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -68,7 +69,7 @@ public class CommentDAO {
                             Integer.toString(resultSet.getInt("ID_COMENTARISTA")),
                             resultSet.getInt("ID"),
                             resultSet.getString("NOME"),
-                            resultSet.getString("COMENTARIO"),
+                            WordFilter.verifyFWord(resultSet.getString("COMENTARIO")),
                             resultSet.getString("TB_COMENTARIO_POSTAGEM.DT_REGISTRO"),
                             resultSet.getString("HASH_FOTO")
                     )
