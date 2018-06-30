@@ -69,7 +69,8 @@ public class CommentDAO {
                             resultSet.getInt("ID"),
                             resultSet.getString("NOME"),
                             resultSet.getString("COMENTARIO"),
-                            resultSet.getString("TB_COMENTARIO_POSTAGEM.DT_REGISTRO")
+                            resultSet.getString("TB_COMENTARIO_POSTAGEM.DT_REGISTRO"),
+                            resultSet.getString("HASH_FOTO")
                     )
             );
         }

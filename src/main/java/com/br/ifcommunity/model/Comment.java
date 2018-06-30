@@ -11,6 +11,7 @@ public class Comment implements Serializable {
     private String authorName;
     private String commentText;
     private String registerDate;
+    private String authorPhoto;
 
     public Comment() {
     }
@@ -19,19 +20,24 @@ public class Comment implements Serializable {
         this.commentText = commentText;
     }
 
-    public Comment(int postId, String userId, int commentId, String authorName, String commentText, String registerDate) {
+    public Comment(int postId, String userId, int commentId, String authorName, String commentText, String registerDate, String authorPhoto) {
         this.postId = postId;
         this.userId = userId;
         this.commentId = commentId;
         this.authorName = authorName;
         this.commentText = commentText;
         this.registerDate = registerDate;
+        this.authorPhoto = authorPhoto;
     }
 
     public Comment(int postId, String userId, String commentText) {
         this.postId = postId;
         this.userId = userId;
         this.commentText = commentText;
+    }
+
+    public String getAuthorPhoto() {
+        return authorPhoto;
     }
 
     public int getPostId() {
@@ -59,14 +65,17 @@ public class Comment implements Serializable {
         return commentId;
     }
 
+
     @Override
     public String toString() {
         return "Comment{" +
                 "postId=" + postId +
-                ", userId=" + userId +
+                ", userId='" + userId + '\'' +
+                ", commentId=" + commentId +
                 ", authorName='" + authorName + '\'' +
                 ", commentText='" + commentText + '\'' +
                 ", registerDate='" + registerDate + '\'' +
+                ", authorPhoto='" + authorPhoto + '\'' +
                 '}';
     }
 
@@ -76,15 +85,17 @@ public class Comment implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         Comment comment = (Comment) o;
         return postId == comment.postId &&
+                commentId == comment.commentId &&
                 Objects.equals(userId, comment.userId) &&
                 Objects.equals(authorName, comment.authorName) &&
                 Objects.equals(commentText, comment.commentText) &&
-                Objects.equals(registerDate, comment.registerDate);
+                Objects.equals(registerDate, comment.registerDate) &&
+                Objects.equals(authorPhoto, comment.authorPhoto);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(postId, userId, authorName, commentText, registerDate);
+        return Objects.hash(postId, userId, commentId, authorName, commentText, registerDate, authorPhoto);
     }
 }
