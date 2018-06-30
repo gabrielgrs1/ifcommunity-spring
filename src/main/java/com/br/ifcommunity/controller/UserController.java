@@ -42,7 +42,7 @@ public class UserController {
             user = UserDAO.login(user);
 
             if (user == null) {
-                return new ResponseEntity(HttpStatus.NO_CONTENT);
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Collections.singletonList("Usuário ou senha incorreto!"));
             }
 
             return ResponseEntity.ok().body(user);
