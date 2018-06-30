@@ -77,7 +77,12 @@ public class UserController {
         try {
             verifyError = UserDAO.verifyIsNotRegister(verifyString);
 
-            return ResponseEntity.ok().body(Collections.singletonList(verifyError));
+            if (verifyError.equals("Pode cadastrar!")) {
+                return ResponseEntity.ok().body(Collections.singletonList(verifyError));
+            } else {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Collections.singletonList(verifyError));
+            }
+
 
         } catch (SQLException e) {
             e.printStackTrace();
