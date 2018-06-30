@@ -142,7 +142,6 @@ public class Post implements Serializable {
         this.likeDeslikePosts = likeDeslikePosts;
     }
 
-
     @Override
     public String toString() {
         return "Post{" +
