@@ -136,7 +136,7 @@ public class UserDAO {
             if (resultSet.getString("SENHA").equals(userRequestBody.getPassword())) {
                 if (resultSet.getInt("TIPO_DE_REGISTRO") == 1) {    // Case the user is Student
                     user = new User(
-                            resultSet.getString("TOKEN") + ";" +resultSet.getInt("ID_USUARIO"),
+                            resultSet.getString("TOKEN") + ";" + resultSet.getInt("ID_USUARIO"),
                             resultSet.getInt("ID_ALUNO"),
                             resultSet.getString("USUARIO"),
                             resultSet.getString("NOME"),
@@ -186,7 +186,7 @@ public class UserDAO {
 
         while (resultSet.next()) {
             student = new User(
-                    resultSet.getString("TOKEN") + ";" +resultSet.getInt("ID_USUARIO"),
+                    resultSet.getString("TOKEN") + ";" + resultSet.getInt("ID_USUARIO"),
                     resultSet.getInt("ID_ALUNO"),
                     resultSet.getString("USUARIO"),
                     resultSet.getString("NOME"),
@@ -211,10 +211,11 @@ public class UserDAO {
         String SQLQuery;
         Connection connection = ConnectionFactory.getConnection();
 
-        if (verifyString.contains("@")) {
+
+        if (VerificationRegister.mail(verifyString)) {
             SQLQuery = "SELECT * FROM TB_USUARIO WHERE EMAIL = ?";
 
-            preparedStatement = connection.prepareCall(SQLQuery);
+            preparedStatement = Objects.requireNonNull(connection).prepareCall(SQLQuery);
             preparedStatement.setString(1, verifyString);
             resultSet = preparedStatement.executeQuery();
 
@@ -222,19 +223,24 @@ public class UserDAO {
                 return "Email já cadastrado!";
             }
         } else if (VerificationRegister.enrolledNumberValidate(verifyString)) {
-            SQLQuery = "SELECT * FROM TB_ALUNO WHERE MATRICULA = ?";
+
+            SQLQuery = "SELECT * FROM TB_ALUNO";
 
             preparedStatement = Objects.requireNonNull(connection).prepareCall(SQLQuery);
-            preparedStatement.setString(1, verifyString);
             resultSet = preparedStatement.executeQuery();
 
-            if (resultSet.next()) {
-                return "Matricula já cadastrada!";
+            while (resultSet.next()) {
+                verifyString = verifyString.split("-")[0];
+                String enrolledNumberDB = resultSet.getString("MATRICULA").split("-")[0];
+
+                if (verifyString.equals(enrolledNumberDB)) {
+                    return "Matricula já cadastrada!";
+                }
             }
         } else {
             SQLQuery = "SELECT * FROM TB_USUARIO WHERE USUARIO = ?";
 
-            preparedStatement = connection.prepareCall(SQLQuery);
+            preparedStatement = Objects.requireNonNull(connection).prepareCall(SQLQuery);
             preparedStatement.setString(1, verifyString);
             resultSet = preparedStatement.executeQuery();
 
