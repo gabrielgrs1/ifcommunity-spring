@@ -212,7 +212,7 @@ public class UserDAO {
         Connection connection = ConnectionFactory.getConnection();
 
 
-        if (VerificationRegister.mail(verifyString)) {
+        if (verifyString.contains("@")) {
             SQLQuery = "SELECT * FROM TB_USUARIO WHERE EMAIL = ?";
 
             preparedStatement = Objects.requireNonNull(connection).prepareCall(SQLQuery);
