@@ -304,19 +304,16 @@ public class PostDAO {
         searchKeyword = "%" + searchKeyword + "%";
 
         String SQLQuery = "SELECT * FROM VW_RECUPERA_POSTAGEM WHERE" +
-                " MATERIA = ? AND AUTOR LIKE ?" +
-                " OR MATERIA = ? AND POSTAGEM LIKE ?" +
-                " OR MATERIA = ? AND TITULO LIKE ?" +
-                " OR MATERIA = ? AND LINGUAGEM_POSTAGEM LIKE ?";
+                " MATERIA = ? AND (AUTOR LIKE ?" +
+                " OR POSTAGEM LIKE ?" +
+                " OR TITULO LIKE ?" +
+                " OR LINGUAGEM_POSTAGEM LIKE ?)";
         preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
         preparedStatement.setString(1, matter);
         preparedStatement.setString(2, searchKeyword);
-        preparedStatement.setString(3, matter);
+        preparedStatement.setString(3, searchKeyword);
         preparedStatement.setString(4, searchKeyword);
-        preparedStatement.setString(5, matter);
-        preparedStatement.setString(6, searchKeyword);
-        preparedStatement.setString(7, matter);
-        preparedStatement.setString(8, searchKeyword);
+        preparedStatement.setString(5, searchKeyword);
         resultSet = preparedStatement.executeQuery();
 
         makeArrayListPost(resultSet, listPost, likeDeslikePostArrayList);
