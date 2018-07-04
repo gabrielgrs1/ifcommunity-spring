@@ -153,7 +153,7 @@ public class UserDAO {
             }
         }
 
-        connection.close();
+        //connection.close();
         return user;
 
     }
