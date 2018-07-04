@@ -33,7 +33,7 @@ public class MatterDAO {
             ));
         }
 
-        //connection.close();
+        connection.close();
         return mattersList;
     }
 
