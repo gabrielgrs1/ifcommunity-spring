@@ -22,7 +22,7 @@ public class MatterDAO {
         ArrayList<Matter> mattersList = new ArrayList<>();
 
         String SQLQuery = "SELECT * FROM TB_MATERIA";
-        preparedStatement = connection.prepareStatement(SQLQuery);
+        preparedStatement = Objects.requireNonNull(connection).prepareStatement(SQLQuery);
         resultSet = preparedStatement.executeQuery();
 
         while (resultSet.next()) {
