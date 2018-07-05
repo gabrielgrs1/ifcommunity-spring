@@ -8,6 +8,8 @@ public class WordFilter {
         // Para inserir valores no ArrayList, utilizamos o método add
         FWords.add("caralho");
         FWords.add("disgraca");
+        FWords.add("disgraça");
+        FWords.add("disgrassa");
         FWords.add("buceta");
         FWords.add("desgraça");
         FWords.add("inferno");
@@ -20,9 +22,51 @@ public class WordFilter {
         FWords.add("rola");
         FWords.add("fode");
         FWords.add("fude");
-
+        FWords.add("satanas");
+        FWords.add("satanás");
+        FWords.add("satan");
+        FWords.add("merda");
+        FWords.add("lixo");
+        FWords.add("aborto");
+        FWords.add("puta");
+        FWords.add("kct");
+        FWords.add("kacete");
+        FWords.add("k7");
+        FWords.add("kassete");
+        FWords.add("cassete");
+        FWords.add("caralhudo");
+        FWords.add("caralhao");
+        FWords.add("viado");
+        FWords.add("viadinho");
+        FWords.add("viadão");
+        FWords.add("karalho");
+        FWords.add("kralho");
+        FWords.add("cacete");
+        FWords.add("prioca");
+        FWords.add("pirocão");
+        FWords.add("idiota");
+        FWords.add("imbecil");
+        FWords.add("otario");
+        FWords.add("otário");
+        FWords.add("bunda");
+        FWords.add("incompetente");
+        FWords.add("estupido");
+        FWords.add("estupida");
+        FWords.add("estúpida");
+        FWords.add("estúpido");
+        FWords.add("corno");
+        FWords.add("gosar");
+        FWords.add("gozar");
+        FWords.add("putaria");
+        FWords.add("lésbica");
+        FWords.add("lesbica");
+        FWords.add("pirocudo");
+        FWords.add("caceta");
+        FWords.add("arrombado");
+        
+        
         for (String FWord : FWords) {
-            string = string.toLowerCase().replace(FWord.toLowerCase(), "[CENSURADO]");
+            string = string.toLowerCase().replace(FWord.toLowerCase(), "*****");
         }
 
        return string;
