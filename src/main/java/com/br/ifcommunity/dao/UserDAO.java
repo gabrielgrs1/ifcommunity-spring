@@ -106,6 +106,12 @@ public class UserDAO {
                     resultSet.getString("DATA_REGISTRO"),
                     resultSet.getString("DATA_ATUALIZACAO")
             );
+
+            SQLQuery = "UPDATE TB_USUARIO SET DT_ULTIMO_LOGIN = CURRENT_TIMESTAMP, IP_ULTIMO_LOGIN = ? WHERE ID = ?";
+            preparedStatement = connection.prepareStatement(SQLQuery);
+            preparedStatement.setString(1, user.getIp());
+            preparedStatement.setInt(2, resultSet.getInt("ID_USUARIO"));
+            preparedStatement.executeUpdate();
         }
         connection.close();
 
@@ -152,8 +158,6 @@ public class UserDAO {
                 }
 
                 SQLQuery = "UPDATE TB_USUARIO SET DT_ULTIMO_LOGIN = CURRENT_TIMESTAMP, IP_ULTIMO_LOGIN = ? WHERE ID = ?";
-                System.out.println(userRequestBody.getIp());
-                System.out.println(resultSet.getInt("ID_USUARIO"));
                 preparedStatement = connection.prepareStatement(SQLQuery);
                 preparedStatement.setString(1, userRequestBody.getIp());
                 preparedStatement.setInt(2, resultSet.getInt("ID_USUARIO"));
