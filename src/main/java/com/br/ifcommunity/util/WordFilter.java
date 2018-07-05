@@ -64,6 +64,20 @@ public class WordFilter {
         FWords.add("caceta");
         FWords.add("arrombado");
         FWords.add("porra");
+        FWords.add("xana");
+        FWords.add("xoxota");
+        FWords.add("xota");
+        FWords.add("maconheiro");
+        FWords.add("chupador");
+        FWords.add("drogado");
+        FWords.add("drogadinho");
+        FWords.add("nóia");
+        FWords.add("noia");
+        FWords.add("crackudo");
+        FWords.add("cracudo");
+        FWords.add("seu doente");
+        FWords.add("seu duente");
+        
         
         
         for (String FWord : FWords) {
