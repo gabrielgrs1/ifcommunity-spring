@@ -63,6 +63,7 @@ public class WordFilter {
         FWords.add("pirocudo");
         FWords.add("caceta");
         FWords.add("arrombado");
+        FWords.add("porra");
         
         
         for (String FWord : FWords) {
