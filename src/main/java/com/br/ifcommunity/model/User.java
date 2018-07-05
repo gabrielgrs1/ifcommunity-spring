@@ -21,6 +21,7 @@ public class User implements Serializable {
     private String photoHash;
     private String registerDate;
     private String updateDate;
+    private String ip;
 
 
     public User() {
@@ -131,6 +132,14 @@ public class User implements Serializable {
         this.administratorId = administratorId;
     }
 
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
     public String getUser() {
         return user;
     }
@@ -234,7 +243,7 @@ public class User implements Serializable {
     @Override
     public String toString() {
         return "User{" +
-                "userId=" + userId +
+                "userId='" + userId + '\'' +
                 ", studentId=" + studentId +
                 ", teacherId=" + teacherId +
                 ", administratorId=" + administratorId +
@@ -249,6 +258,9 @@ public class User implements Serializable {
                 ", permission=" + permission +
                 ", website='" + website + '\'' +
                 ", photoHash='" + photoHash + '\'' +
+                ", registerDate='" + registerDate + '\'' +
+                ", updateDate='" + updateDate + '\'' +
+                ", ip='" + ip + '\'' +
                 '}';
     }
 
@@ -257,13 +269,13 @@ public class User implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user1 = (User) o;
-        return userId.equals(user1.userId) &&
-                studentId == user1.studentId &&
+        return studentId == user1.studentId &&
                 teacherId == user1.teacherId &&
                 administratorId == user1.administratorId &&
                 typeUser == user1.typeUser &&
                 period == user1.period &&
                 permission == user1.permission &&
+                Objects.equals(userId, user1.userId) &&
                 Objects.equals(user, user1.user) &&
                 Objects.equals(password, user1.password) &&
                 Objects.equals(name, user1.name) &&
@@ -271,12 +283,15 @@ public class User implements Serializable {
                 Objects.equals(mail, user1.mail) &&
                 Objects.equals(enrolledNumber, user1.enrolledNumber) &&
                 Objects.equals(website, user1.website) &&
-                Objects.equals(photoHash, user1.photoHash);
+                Objects.equals(photoHash, user1.photoHash) &&
+                Objects.equals(registerDate, user1.registerDate) &&
+                Objects.equals(updateDate, user1.updateDate) &&
+                Objects.equals(ip, user1.ip);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(userId, studentId, teacherId, administratorId, user, password, name, phone, mail, typeUser, period, enrolledNumber, permission, website, photoHash);
+        return Objects.hash(userId, studentId, teacherId, administratorId, user, password, name, phone, mail, typeUser, period, enrolledNumber, permission, website, photoHash, registerDate, updateDate, ip);
     }
 }
