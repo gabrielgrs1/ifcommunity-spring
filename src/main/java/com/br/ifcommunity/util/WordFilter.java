@@ -77,8 +77,49 @@ public class WordFilter {
         FWords.add("cracudo");
         FWords.add("seu doente");
         FWords.add("seu duente");
-        
-        
+        FWords.add("orgasmo");
+        FWords.add("orificio");
+        FWords.add("orifício");
+        FWords.add("preto");
+        FWords.add("estrume");
+        FWords.add("esterco");
+        FWords.add("chorume");
+        FWords.add("vadia");
+        FWords.add("vaca");
+        FWords.add("piranha");
+        FWords.add("bucetuda");
+        FWords.add("vagabunda");
+        FWords.add("vagaranha");
+        FWords.add("branco");
+        FWords.add("imundo");
+        FWords.add("droguinha");
+        FWords.add("pretinho");
+        FWords.add("branquelo");
+        FWords.add("negão");
+        FWords.add("nerginho");
+        FWords.add("nergão");
+        FWords.add("neguim");
+        FWords.add("nego");
+        FWords.add("negrim");
+        FWords.add("negritude");
+        FWords.add("feminista");
+        FWords.add("machista");
+        FWords.add("asexuado");
+        FWords.add("assexuado");
+        FWords.add("estuprador");
+        FWords.add("balofo");
+        FWords.add("gordo");
+        FWords.add("pretita");
+        FWords.add("pintinho");
+        FWords.add("prexeca");
+        FWords.add("ppk");
+        FWords.add("linguiça");
+        FWords.add("gazela");
+        FWords.add("viadim");
+        FWords.add("gaylord");
+        FWords.add("dragqueen");
+        FWords.add("dentuço");
+        FWords.add("dentuça");
         
         for (String FWord : FWords) {
             string = string.toLowerCase().replace(FWord.toLowerCase(), "*****");
