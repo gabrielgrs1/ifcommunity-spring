@@ -82,7 +82,7 @@ public class UserDAO {
         preparedStatement.setString(9, null);
         preparedStatement.setString(10, HashGenerator.gerenerateHashUser());
 
-        resultSet = preparedStatement.executeQuery();
+        preparedStatement.executeQuery();
 
 
         SQLQuery = "SELECT * FROM VW_RECUPERA_ALUNO WHERE EMAIL = ?";

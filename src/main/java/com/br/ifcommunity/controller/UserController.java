@@ -16,7 +16,7 @@ import java.util.Collections;
 @RequestMapping(value = "/user")
 public class UserController {
 
-    @RequestMapping(value = "/register", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity registerUser(@RequestBody User user) {
         System.out.println("[REGISTRO] User passado pelo front: " + user);
 
@@ -52,7 +52,7 @@ public class UserController {
         }
     }
 
-    @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity udpateUser(@RequestBody User user) {
         System.out.println("[ATUALIZA USUARIO] User passado pelo front: " + user);
 
@@ -70,7 +70,7 @@ public class UserController {
         }
     }
 
-    @RequestMapping(value = "/verify", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/check", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity verifyIsNotRegister(@RequestParam String verifyString) {
         String verifyError;
 

@@ -20,9 +20,9 @@ import java.util.Objects;
 @RequestMapping(value = "/post")
 @CrossOrigin(origins = "*")
 public class PostController {
-    @RequestMapping(value = "/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity getPost(@RequestParam String name, String lastPost) {
-        ArrayList<Post> listPost = null;
+        ArrayList<Post> listPost;
 
         try {
             listPost = PostDAO.getPost(name, lastPost);
@@ -54,7 +54,7 @@ public class PostController {
     }
 
 
-    @RequestMapping(value = "/make", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity doPost(@RequestBody Post postRequestBody) {
         ArrayList<String> returnMessage = new ArrayList<>();
 
@@ -72,7 +72,7 @@ public class PostController {
         }
     }
 
-    @RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity editPost(@RequestBody PostEdited postRequestBody) {
         ArrayList<String> returnMessage = new ArrayList<>();
 
@@ -80,7 +80,7 @@ public class PostController {
             returnMessage.add(PostDAO.editPost(postRequestBody));
 
             if (returnMessage.get(0).equals("Usuário não tem permissão para editar essa postagem!")) {
-               return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(returnMessage);
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(returnMessage);
             }
 
             return ResponseEntity.ok().body(returnMessage);
@@ -90,7 +90,7 @@ public class PostController {
         }
     }
 
-    @RequestMapping(value = "/remove", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity removePost(@RequestBody PostEdited postRequestBody) {
         ArrayList<String> returnMessage = new ArrayList<>();
 
@@ -109,7 +109,7 @@ public class PostController {
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity searchPost(@RequestParam @NonNull String searchKeyword,  @NonNull String matter) {
+    public ResponseEntity searchPost(@RequestParam @NonNull String searchKeyword, @NonNull String matter) {
         ArrayList<Post> postArrayList;
 
         try {

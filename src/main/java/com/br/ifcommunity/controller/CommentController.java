@@ -14,9 +14,9 @@ import java.util.Collections;
 
 @Controller
 @CrossOrigin(origins = "*")
-@RequestMapping(value = "/post")
+@RequestMapping(value = "/comment")
 public class CommentController {
-    @RequestMapping(value = "/comment", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity comment(@RequestBody Comment comment) {
         ArrayList<String> returnMessage = new ArrayList<>();
 
@@ -34,7 +34,7 @@ public class CommentController {
         }
     }
 
-    @RequestMapping(value = "/comment", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity comment(@RequestParam int postId) {
         ArrayList<Comment> commentList;
 
@@ -42,7 +42,8 @@ public class CommentController {
             commentList = CommentDAO.getComments(postId);
 
             if (commentList == null) {
-                commentList.add(new Comment("Falha ao buscar os comentários, ou nenhum comentário foi encontrado!"));
+                commentList = (ArrayList<Comment>) Collections.singletonList(
+                        new Comment("Falha ao buscar os comentários, ou nenhum comentário foi encontrado!"));
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).body(commentList);
             }
             return ResponseEntity.ok().body(commentList);

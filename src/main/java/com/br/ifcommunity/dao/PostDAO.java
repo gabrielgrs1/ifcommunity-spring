@@ -333,11 +333,10 @@ public class PostDAO {
                     resultSet.getString("DATA_ATUALIZACAO"),
                     resultSet.getString("FOTO_AUTOR"));
 
-            for (int i = 0; i < likeDeslikePostArrayList.size(); i++) {
-                if (likeDeslikePostArrayList.get(i).getIdPost() == resultSet.getInt("ID_POSTAGEM")) {
-                    post.getLikeDeslikePosts().add(likeDeslikePostArrayList.get(i));
+            for (LikeDeslikePost likeDeslikePost : likeDeslikePostArrayList)
+                if (likeDeslikePost.getIdPost() == resultSet.getInt("ID_POSTAGEM")) {
+                    post.getLikeDeslikePosts().add(likeDeslikePost);
                 }
-            }
 
             listPost.add(post);
         }

@@ -20,9 +20,9 @@ import java.util.Collections;
 @RequestMapping(value = "/matter")
 public class MatterController {
 
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getAllMatters() {
-        ArrayList<Matter> matterlist = null;
+        ArrayList<Matter> matterlist;
 
         try {
             matterlist = MatterDAO.getAllMatters();
@@ -39,7 +39,7 @@ public class MatterController {
         return ResponseEntity.ok().body(matterlist);
     }
 
-    @RequestMapping(value = "/user", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getMatterById(@RequestParam int studentId) {
         ArrayList<Matter> matterlist;
 
@@ -59,7 +59,7 @@ public class MatterController {
     }
 
 
-    @RequestMapping(value = "/user", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateMattersUser(@RequestBody MatterUser responseBody) {
         String resultString;
         try {

@@ -21,13 +21,13 @@ public class ChartController {
 
     @RequestMapping(value = "/charts", method = RequestMethod.GET)
     public ResponseEntity getChartsInfo(@RequestParam String userId) {
-        ArrayList<Chart> chartsInfoList = null;
+        ArrayList<Chart> chartsInfoList;
 
         try {
             chartsInfoList = ChartDAO.getChartsInfo(userId);
 
             if (chartsInfoList == null) {
-                chartsInfoList.add(new Chart("Falha ao buscar informações do gráfico!"));
+                chartsInfoList = (ArrayList<Chart>) Collections.singletonList(new Chart("Falha ao buscar informações do gráfico!"));
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).body(chartsInfoList);
             }
 
