@@ -151,7 +151,8 @@ public class UserDAO {
                             resultSet.getInt("TIPO_DE_REGISTRO"),
                             resultSet.getInt("PERIODO"),
                             resultSet.getString("MATRICULA"),
-                            resultSet.getString("HASH_FOTO"),
+/*                            resultSet.getString("HASH_FOTO"),*/
+                            null,
                             resultSet.getString("DATA_REGISTRO"),
                             resultSet.getString("DATA_ATUALIZACAO")
                     );
@@ -208,7 +209,8 @@ public class UserDAO {
                     resultSet.getInt("TIPO_DE_REGISTRO"),
                     resultSet.getInt("PERIODO"),
                     resultSet.getString("MATRICULA"),
-                    resultSet.getString("HASH_FOTO"),
+                    /*                            resultSet.getString("HASH_FOTO"),*/
+                    null,
                     resultSet.getString("DATA_REGISTRO"),
                     resultSet.getString("DATA_ATUALIZACAO")
             );
