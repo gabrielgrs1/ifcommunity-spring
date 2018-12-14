@@ -71,7 +71,8 @@ public class CommentDAO {
                             resultSet.getString("NOME"),
                             WordFilter.verifyFWord(resultSet.getString("COMENTARIO")),
                             resultSet.getString("TB_COMENTARIO_POSTAGEM.DT_REGISTRO"),
-                            resultSet.getString("HASH_FOTO")
+                        null
+                          //  resultSet.getString("HASH_FOTO")
                     )
             );
         }
